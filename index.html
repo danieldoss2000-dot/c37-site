@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f5f1">
+<meta name="description" content="C37-38: our house, room by room. Styles, 3D walkthrough, plans and checklist.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%235a3d2b'/%3E%3Cpath d='M8 17l8-8 8 8v8H8z' fill='%23e2d6c3'/%3E%3C/svg%3E">
+
+<title>C37 Interior Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: same quiet gallery language as the Step 1 page. Plans first, then one card per room: photo, plan, three features. */
+:root {
+  --bg: #f7f5f1; --card: #ffffff; --ink: #2a2622; --muted: #8a8178; --line: #e6e1d9; --tag: #efe9e0; --slot: #f0ece6;
+  --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --body: "Jost", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #171514; --card: #201e1c; --ink: #eee8e1; --muted: #a39a90; --line: #33302c; --tag: #2b2825; --slot: #262320; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #171514; --card: #201e1c; --ink: #eee8e1; --muted: #a39a90; --line: #33302c; --tag: #2b2825; --slot: #262320; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-weight: 300; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; }
+header { text-align: center; display: grid; gap: 10px; margin-bottom: 40px; }
+.step { font-size: .75rem; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.05; }
+h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+header p { margin: 0; color: var(--muted); }
+.style-tag { justify-self: center; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--card); padding: 6px 14px 6px 6px; border-radius: 999px; font-size: .95rem; }
+.style-tag img { width: 34px; height: 42px; object-fit: cover; border-radius: 999px; }
+section { display: grid; gap: 18px; margin-top: 52px; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.sec-h span { color: var(--muted); font-size: .9rem; }
+.plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+@media (max-width: 680px) { .plans { grid-template-columns: minmax(0, 1fr); } }
+.plans figure { margin: 0; display: grid; gap: 10px; }
+.plans a { display: block; background: #fff; border: 1px solid var(--line); padding: 10px; }
+.plans img { width: 100%; height: auto; display: block; aspect-ratio: 1515 / 2910; }
+.plans figcaption { text-align: center; font-family: var(--display); font-size: 1.4rem; }
+.rooms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+@media (max-width: 1000px) { .rooms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .rooms { grid-template-columns: minmax(0, 1fr); } }
+.room { background: var(--card); border: 1px solid var(--line); display: grid; align-content: start; min-width: 0; }
+.photo { aspect-ratio: 4 / 3; background: var(--slot); display: block; overflow: hidden; position: relative; }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo.empty { display: grid; place-content: center; text-align: center; gap: 4px; color: var(--muted); }
+.photo.empty b { font-family: var(--display); font-weight: 400; font-size: 1.4rem; color: var(--ink); }
+.photo.empty span { font-size: .85rem; }
+.thumbs { display: flex; gap: 4px; padding: 4px; background: var(--slot); }
+.thumbs a { flex: 1; aspect-ratio: 4 / 3; overflow: hidden; }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.body { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; padding: 14px; align-items: start; }
+.plan-mini { background: #fff; border: 1px solid var(--line); height: 110px; padding: 4px; }
+.plan-mini img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.info { display: grid; gap: 8px; min-width: 0; }
+.info .head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.info h3 { font-size: 1.35rem; line-height: 1.1; }
+.info .area { font-size: .8rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tags span { font-size: .8rem; background: var(--tag); padding: 3px 8px; border-radius: 2px; }
+details { border-top: 1px solid var(--line); padding-top: 14px; }
+summary { cursor: pointer; font-family: var(--display); font-size: 1.5rem; }
+summary:focus-visible, a:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.builder { display: grid; gap: 12px; margin-top: 14px; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px; }
+.controls label { display: grid; gap: 4px; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.controls select { font: 400 .95rem var(--body); color: var(--ink); background: var(--card); border: 1px solid var(--line); padding: .45rem .6rem; max-width: 100%; }
+.promptbox { font: .85rem/1.6 ui-monospace, Menlo, monospace; background: var(--card); border: 1px solid var(--line); padding: 14px; white-space: pre-wrap; word-break: break-word; }
+.row { display: flex; gap: 10px; align-items: center; }
+.btn { font: 500 .9rem var(--body); background: var(--ink); color: var(--bg); border: 0; padding: .55rem 1rem; cursor: pointer; }
+.status { font-size: .85rem; color: var(--muted); }
+
+/* Kitchen styles */
+.kit { display: grid; gap: 18px; scroll-margin-top: 16px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tabs button { font: 400 .95rem var(--body); color: var(--ink); background: var(--card); border: 1px solid var(--line); padding: .5rem .9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tabs button small { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
+.tabs button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.kb { background: var(--card); border: 1px solid var(--line); padding: 12px; display: grid; gap: 8px; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: 58px; }
+.kb[hidden] { display: none; }
+.kb > * { overflow: hidden; min-width: 0; }
+.kb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.kb .h { grid-column: 1 / 9; grid-row: span 6; }
+.kb .v { grid-column: 9 / 13; grid-row: span 6; }
+.kb .d { grid-column: 1 / 7; grid-row: span 5; }
+.kb .x { grid-column: 7 / 10; grid-row: span 5; }
+.kb .y { grid-column: 10 / 13; grid-row: span 5; }
+.kb .chips { grid-column: 1 / 13; grid-row: span 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.kb .chips span { display: flex; align-items: end; padding: 5px 8px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 760px) {
+  .kb { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; }
+  .kb .h, .kb .d { grid-column: 1 / 3; grid-row: auto; aspect-ratio: 3 / 2; }
+  .kb .v, .kb .x, .kb .y { grid-column: auto; grid-row: auto; aspect-ratio: 3 / 4; }
+  .kb .y { display: none; }
+  .kb .chips { grid-column: 1 / 3; grid-row: auto; height: 48px; }
+  .kb .chips span { font-size: 0; }
+}
+.moves { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .moves { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.moves figure { margin: 0; display: grid; gap: 8px; }
+.moves .ph { aspect-ratio: 3 / 4; overflow: hidden; border: 1px solid var(--line); background: var(--slot); }
+.moves img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.moves b { font-family: var(--display); font-weight: 400; font-size: 1.25rem; line-height: 1.1; }
+.moves-h { font-family: var(--display); font-size: 1.4rem; margin: 6px 0 0; font-weight: 400; }
+a.photo { display: block; }
+
+/* Tabs across the whole page */
+.panel[hidden] { display: none; }
+.tabbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); display: flex; gap: 6px; overflow-x: auto; padding-block: 12px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
+.tabbar button { flex: 1 0 auto; font: 400 1rem var(--body); color: var(--muted); background: transparent; border: 0; border-bottom: 2px solid transparent; padding: .5rem .9rem; cursor: pointer; display: grid; gap: 2px; text-align: left; }
+.tabbar button small { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; }
+.tabbar button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+.panel-body { display: grid; gap: 18px; }
+.boards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
+@media (max-width: 1000px) { .boards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .boards { grid-template-columns: minmax(0, 1fr); } }
+.boards figure { margin: 0; display: grid; gap: 14px; }
+.boards a { display: block; background: var(--card); padding: 12px; border: 1px solid var(--line); }
+.boards img { width: 100%; height: auto; display: block; aspect-ratio: 1136 / 1408; }
+.boards figcaption { display: grid; gap: 2px; text-align: center; }
+.boards figcaption b { font-family: var(--display); font-weight: 500; font-size: 1.6rem; }
+.boards figcaption span { color: var(--muted); font-size: .95rem; }
+.next { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; opacity: .55; }
+.next img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; }
+
+.real { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 800px) { .real { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.real a { display: grid; gap: 6px; color: var(--muted); text-decoration: none; font-size: .8rem; }
+.real img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; border: 1px solid var(--line); }
+.open3d { justify-self: start; font: 500 .95rem var(--body); background: var(--ink); color: var(--bg); padding: .65rem 1.1rem; text-decoration: none; }
+.bigplan { display: block; background: #fff; border: 1px solid var(--line); padding: 8px; }
+.bigplan img { width: 100%; height: auto; display: block; }
+
+.m3d { display: grid; gap: 8px; }
+.m3d.on { grid-template-columns: minmax(0, 1fr); }
+.m3d iframe { width: 100%; height: min(78vh, 720px); border: 1px solid var(--line); background: #f4f1ec; display: block; }
+.full3d { color: var(--muted); font-size: .85rem; justify-self: start; }
+button.open3d { border: 0; cursor: pointer; }
+.m3d.pending button { opacity: .5; cursor: default; }
+
+.styleswitch { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 64px); z-index: 4; background: var(--bg); display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-block: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.ss-l { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-right: 6px; }
+.styleswitch button { font: 400 .9rem var(--body); color: var(--ink); background: var(--card); border: 1px solid var(--line); padding: .4rem .75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.styleswitch button i { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line); }
+.styleswitch button[aria-checked="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.room .mb { display: grid; }
+.room .mb .main { aspect-ratio: 4 / 3; overflow: hidden; background: var(--slot); display: block; }
+.room .mb .main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.room .vars { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; background: var(--slot); }
+.room .vars button { padding: 0; border: 0; background: none; cursor: pointer; aspect-ratio: 3 / 2; overflow: hidden; opacity: .6; }
+.room .vars button[aria-pressed="true"] { opacity: 1; outline: 2px solid var(--ink); outline-offset: -2px; }
+.room .vars img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.room .real3d { display: flex; gap: 4px; padding: 4px; background: var(--slot); align-items: stretch; }
+.room .real3d a { flex: 1; aspect-ratio: 3 / 2; overflow: hidden; position: relative; }
+.room .real3d img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.room .real3d .b3 { position: absolute; left: 4px; top: 4px; font-size: .62rem; letter-spacing: .12em; background: var(--ink); color: var(--bg); padding: 1px 5px; }
+
+.flags { border-left: 3px solid var(--ink); background: var(--card); padding: 12px 16px; display: grid; gap: 6px; max-width: 70ch; }
+.flags h3 { font-size: 1.3rem; }
+.flags ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: .92rem; }
+
+.m3d .hint { margin: 0; color: var(--muted); font-size: .85rem; }
+.house3d { margin-block: 8px 24px; }
+@media (max-width: 700px) {
+  .tabbar { gap: 0; padding-block: 6px; margin-bottom: 20px; }
+  .tabbar button { padding: .45rem .55rem; font-size: .9rem; }
+  .tabbar button small { font-size: .6rem; letter-spacing: .1em; }
+  .styleswitch { top: calc(env(safe-area-inset-top, 0px) + 52px); flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .styleswitch button { flex: 0 0 auto; }
+  .ss-l { display: none; }
+  .m3d iframe { height: 72vh; }
+  .m3d .full3d { font-size: 1rem; background: var(--card); border: 1px solid var(--line); padding: .6rem 1rem; color: var(--ink); text-decoration: none; }
+  .open3d { width: 100%; text-align: center; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; }
+  .tabs button { flex: 0 0 auto; }
+  .body { grid-template-columns: 72px minmax(0, 1fr); }
+  .plan-mini { height: 86px; }
+  h1 { font-size: 2.1rem; }
+}
+
+button.full3d { font: 500 .95rem var(--body); background: var(--card); color: var(--ink); border: 1px solid var(--line); padding: .6rem 1rem; cursor: pointer; justify-self: start; }
+.close3d { display: none; }
+.m3d.fs { position: fixed; inset: 0; z-index: 1000; background: var(--bg); margin: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); display: block; }
+.m3d.fs iframe { width: 100%; height: 100%; border: 0; }
+.m3d.fs .open3d, .m3d.fs .full3d, .m3d.fs .hint { display: none; }
+.m3d.fs .close3d { display: block; position: absolute; left: calc(env(safe-area-inset-left, 0px) + 10px); top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 2; font: 600 1rem var(--body); background: var(--ink); color: var(--bg); border: 0; padding: .7rem 1rem; min-height: 44px; cursor: pointer; }
+body.fs-lock { overflow: hidden; }
+
+/* Suggested blend (not decided) */
+.blend { margin-top: 8px; gap: 26px; }
+.blend-h { text-align: center; display: grid; gap: 8px; }
+.blend-h .who { justify-self: center; font-size: .75rem; letter-spacing: .24em; text-transform: uppercase; background: var(--tag); color: var(--ink); border: 1px dashed var(--muted); padding: 6px 14px; border-radius: 999px; font-weight: 400; }
+.blend-h h2 { font-size: clamp(2.2rem, 6vw, 3.4rem); }
+.blend-h p { margin: 0; color: var(--muted); max-width: 46ch; justify-self: center; }
+.bgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.bgrid figure { margin: 0; position: relative; overflow: hidden; background: var(--slot); }
+.bgrid figure:first-child { grid-column: span 2; grid-row: span 2; }
+.bgrid a { display: block; height: 100%; }
+.bgrid img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 3 / 2; }
+.bgrid figcaption { position: absolute; left: 10px; bottom: 10px; background: rgba(32,26,21,.72); color: #f5eee5; font-size: .8rem; letter-spacing: .06em; padding: 4px 10px; border-radius: 999px; pointer-events: none; }
+@media (max-width: 720px) { .bgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bgrid figure:first-child { grid-column: 1 / -1; grid-row: auto; } }
+.pal { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
+.pal span { aspect-ratio: 1 / 1.15; display: flex; align-items: flex-end; padding: 8px; font-size: .74rem; line-height: 1.2; border-radius: 4px; }
+@media (max-width: 720px) { .pal { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.from { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .from { grid-template-columns: minmax(0, 1fr); } }
+.from div { background: var(--card); border: 1px solid var(--line); padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+.from b { font-family: var(--display); font-weight: 500; font-size: 1.45rem; }
+.from ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.easy-h { font-size: clamp(1.6rem, 4vw, 2.1rem); text-align: center; margin-top: 8px; }
+.easy { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 900px) { .easy { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.easy div { background: var(--tag); padding: 14px; display: grid; gap: 4px; align-content: start; border-radius: 4px; }
+.easy b { font-weight: 500; }
+.easy span { color: var(--muted); font-size: .9rem; }
+.easy .no-white { outline: 2px solid #b8674a; outline-offset: -2px; }
+.started { margin-top: 64px; margin-bottom: 18px; }
+
+/* Check tab */
+.chk { display: grid; gap: 34px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: .85rem; align-items: center; }
+.legend i, .cl i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.ok { background: #6f9a5a; } .todo { background: #e0a030; } .idea { background: #9c8b78; } .no { background: #b8674a; }
+.cl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1000px) { .cl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .cl { grid-template-columns: minmax(0, 1fr); } }
+.cl section { margin: 0; background: var(--card); border: 1px solid var(--line); padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
+.cl h4 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.cl ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.cl li { font-size: .92rem; line-height: 1.3; }
+.cl li small { color: var(--muted); }
+.chk .sec-h { margin-top: 10px; }
+@media (max-width: 430px) { .tabbar button small { display: none; } .tabbar button { padding: .5rem .5rem; font-size: .88rem; } }
+footer { margin-top: 56px; text-align: center; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <nav class="tabbar" role="tablist" aria-label="Sections">
+    <button type="button" role="tab" id="t-step1" aria-controls="step1" aria-selected="true">Step 1<small>Style</small></button>
+    <button type="button" role="tab" id="t-step2" aria-controls="step2" aria-selected="false" tabindex="-1">Step 2<small>Room by room</small></button>
+    <button type="button" role="tab" id="t-step3" aria-controls="step3" aria-selected="false" tabindex="-1">Step 3<small>Materials</small></button>
+    <button type="button" role="tab" id="t-plan" aria-controls="plan" aria-selected="false" tabindex="-1">Units plan<small>C37-38</small></button>
+    <button type="button" role="tab" id="t-check" aria-controls="check" aria-selected="false" tabindex="-1">Checklist<small>Forget nothing</small></button>
+  </nav>
+  <div class="panel" role="tabpanel" id="step1" aria-labelledby="t-step1">
+    <header>
+      <div class="step">Step 1 of 3</div>
+      <h1>Which one feels like home?</h1>
+      <p>A suggested blend first, then the six moods it grew from. Nothing is decided yet.</p>
+    </header>
+    <section class="blend" aria-label="Our blend">
+      <div class="blend-h"><span class="who">A suggestion</span><h2>Walnut, lime &amp; oak</h2><p>What if we took Walnut &amp; Travertine and added Cairo arches and Scandinavian light oak? Easy to live with. Your call.</p></div>
+      <div class="bgrid"><figure><a href="assets/blend/great.jpg" target="_blank" rel="noopener"><img src="assets/blend/great.jpg" alt="Our blend: Living" loading="lazy"></a><figcaption>Living</figcaption></figure><figure><a href="assets/blend/kitchen.jpg" target="_blank" rel="noopener"><img src="assets/blend/kitchen.jpg" alt="Our blend: Kitchen" loading="lazy"></a><figcaption>Kitchen</figcaption></figure><figure><a href="assets/blend/master.jpg" target="_blank" rel="noopener"><img src="assets/blend/master.jpg" alt="Our blend: Master bedroom" loading="lazy"></a><figcaption>Master bedroom</figcaption></figure><figure><a href="assets/blend/hall.jpg" target="_blank" rel="noopener"><img src="assets/blend/hall.jpg" alt="Our blend: Entrance" loading="lazy"></a><figcaption>Entrance</figcaption></figure><figure><a href="assets/blend/kids.jpg" target="_blank" rel="noopener"><img src="assets/blend/kids.jpg" alt="Our blend: Kids room" loading="lazy"></a><figcaption>Kids room</figcaption></figure><figure><a href="assets/blend/bath.jpg" target="_blank" rel="noopener"><img src="assets/blend/bath.jpg" alt="Our blend: Shower room" loading="lazy"></a><figcaption>Shower room</figcaption></figure></div>
+      <div class="pal" aria-label="Palette"><span style="background:#e2d6c3;color:#4b4136">Travertine</span><span style="background:#e6dccb;color:#4b4136">Sand limewash</span><span style="background:#d8bf97;color:#3b2f22">White oak</span><span style="background:#5a3d2b;color:#f3e9dd">Walnut</span><span style="background:#9c8b78;color:#fbf6ef">Mushroom</span><span style="background:#6f7454;color:#f4f3ec">Olive</span><span style="background:#b8674a;color:#fbf1ea">Terracotta</span><span style="background:#a88a5a;color:#fbf5ea">Brass</span></div>
+      <div class="from">
+        <div><b>From Walnut &amp; Travertine</b><ul><li>Walnut joinery, doors and headboards</li><li>Travertine look on floors and tops</li><li>Brushed brass</li></ul></div>
+        <div><b>From Cairo Mediterranean</b><ul><li>Soft arches and lit niches</li><li>Warm limewash-look walls</li><li>Rattan, terracotta, sage and olive</li></ul></div>
+        <div><b>From Warm Scandinavian</b><ul><li>White-oak floors and furniture</li><li>Simple, calm lines</li><li>Small matte black details</li></ul></div>
+      </div>
+      <h3 class="easy-h">Easy to live with</h3>
+      <div class="easy"><div class="no-white"><b>Sofas</b><span>Mid-tone performance fabric with washable covers. No white.</span></div><div><b>One leather piece</b><span>Cognac leather wipes clean and ages well.</span></div><div><b>Floors</b><span>Travertine-look porcelain downstairs, matte oak upstairs.</span></div><div><b>Walls</b><span>Washable paint with a limewash look.</span></div><div><b>Worktops</b><span>Warm quartz, not marble.</span></div><div><b>Rugs</b><span>Patterned flatweave hides dust and spills.</span></div><div><b>Storage</b><span>Closed doors over open shelves: less dust.</span></div><div><b>Metals</b><span>Brushed brass and black: no fingerprints.</span></div></div>
+    </section>
+    <div class="sec-h started"><h2>The six moods</h2><span>pick the one you love, and the one you don't</span></div>
+    <div class="boards">
+      <figure><a href="assets/boards/board_A.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_A.jpg" alt="Walnut and Travertine mood board" loading="lazy"></a><figcaption><b>Walnut &amp; Travertine</b><span>Dark wood, pale stone, calm</span></figcaption></figure>
+      <figure><a href="assets/boards/board_B.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_B.jpg" alt="Olive Heritage mood board" loading="lazy"></a><figcaption><b>Olive Heritage</b><span>Olive, arches, cosy and crafted</span></figcaption></figure>
+      <figure><a href="assets/boards/board_C.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_C.jpg" alt="Cairo Mediterranean mood board" loading="lazy"></a><figcaption><b>Cairo Mediterranean</b><span>Limewash, light oak, bright and cool</span></figcaption></figure>
+      <figure><a href="assets/boards/board_S.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_S.jpg" alt="Warm Scandinavian mood board" loading="lazy"></a><figcaption><b>Warm Scandinavian</b><span>White oak, soft white, calm and light</span></figcaption></figure>
+      <figure><a href="assets/boards/board_J.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_J.jpg" alt="Japandi mood board" loading="lazy"></a><figcaption><b>Japandi</b><span>Low oak, paper light, quiet and practical</span></figcaption></figure>
+      <figure><a href="assets/boards/board_W.jpg" target="_blank" rel="noopener"><img src="assets/boards/board_W.jpg" alt="Wabi-sabi mood board" loading="lazy"></a><figcaption><b>Wabi-sabi</b><span>Raw plaster, old wood, earthy and handmade</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="panel" role="tabpanel" id="step2" aria-labelledby="t-step2" hidden>
+  <header>
+    <div class="step">Step 2 of 3</div>
+    <h1>Room by room</h1>
+    <p>Pick a style to see every room in it.</p>
+    
+  </header>
+    <div class="styleswitch" role="radiogroup" aria-label="Show every room in">
+      <span class="ss-l">Show rooms in</span>
+      <button type="button" role="radio" data-s="J" aria-checked="true"><i style="background:#c8a67a"></i>Japandi</button>
+      <button type="button" role="radio" data-s="A" aria-checked="false"><i style="background:#5a3d2b"></i>Walnut &amp; Travertine</button>
+      <button type="button" role="radio" data-s="B" aria-checked="false"><i style="background:#4f5a3a"></i>Olive Heritage</button>
+      <button type="button" role="radio" data-s="C" aria-checked="false"><i style="background:#efe9df"></i>Cairo Mediterranean</button>
+      <button type="button" role="radio" data-s="S" aria-checked="false"><i style="background:#d8bf97"></i>Warm Scandinavian</button>
+    </div>
+    <div class="m3d house3d" data-model="models/house.html"><button type="button" class="open3d">Walk through the house in 3D</button><button type="button" class="full3d">Full screen</button><button type="button" class="close3d" aria-label="Close full screen">✕ Close</button><p class="hint">Pick Ground, First or Both, walk up the stairs, click doors to open them, slide the sun.</p></div>
+
+
+  
+
+
+  <section aria-label="Ground floor rooms">
+    <div class="sec-h"><h2>Ground floor</h2><span>1 of 7 rooms have images</span></div>
+    <div class="rooms"><article class="room"><div class="photo empty"><b>Entrance (outdoor)</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/vestibule_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/vestibule_base.jpg" alt="Outdoor entrance on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Entrance (outdoor)</h3><span class="area">5.1 m²</span></div><div class="tags"><span>Covered entry</span><span>Stone bench + planters</span><span>Wall lanterns</span></div></div></div></article><article class="room"><div class="photo empty"><b>Entrance hall and lobby</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/hall_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/hall_base.jpg" alt="Entrance hall and lobby on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Entrance hall and lobby</h3><span class="area">15.8 m²</span></div><div class="tags"><span>Open stair, olive tree below</span><span>Gallery picture rail</span><span>Arched mirror</span></div></div></div></article><article class="room"><div class="photo empty"><b>Guest toilet</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/guesttoilet_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/guesttoilet_base.jpg" alt="Guest toilet on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Guest toilet</h3><span class="area">4.0 m²</span></div><div class="tags"><span>Invisible door</span><span>Wall-hung WC + shattaf</span><span>Bold stone vanity</span></div></div></div></article><article class="room"><div class="photo empty"><b>Great room</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/great_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/great_base.jpg" alt="Great room on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Great room</h3><span class="area">63.0 m²</span></div><div class="tags"><span>Fluted TV wall</span><span>Two seating groups</span><span>Open to the hall and stair</span></div></div></div></article><article class="room"><div class="photo empty"><b>Kitchen and family dining</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/kitchen_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/kitchen_base.jpg" alt="Kitchen and family dining on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Kitchen and family dining</h3><span class="area">25.3 m²</span></div><div class="tags"><span>Appliance garage</span><span>Sliding stone backsplash</span><span>Chest-height ovens</span><span>Hidden pantry door</span></div></div></div></article><article class="room"><div class="photo empty"><b>Walk-in pantry</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/pantry_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/pantry_base.jpg" alt="Walk-in pantry on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Walk-in pantry</h3><span class="area">7.1 m²</span></div><div class="tags"><span>Cabinet-door entrance</span><span>Lit wood shelves</span><span>Appliance shelf</span></div></div></div></article><article class="room"><div class="photo empty"><b>Store (outside door)</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/store_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/store_base.jpg" alt="Store (outside door) on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Store (outside door)</h3><span class="area">2.6 m²</span></div><div class="tags"><span>Ceiling-high shelving</span><span>Tool wall</span><span>Sensor light</span></div></div></div></article></div>
+  </section>
+
+  <section aria-label="First floor rooms">
+    <div class="sec-h"><h2>First floor</h2><span></span></div>
+    <div class="rooms"><article class="room"><div class="photo empty"><b>Master bedroom</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/master_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/master_base.jpg" alt="Master bedroom on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Master bedroom</h3><span class="area">19.3 m²</span></div><div class="tags"><span>Headboard wall</span><span>Hidden TV</span><span>Reading chair</span><span>Terrace</span></div></div></div></article><article class="room"><div class="photo empty"><b>Master shower room</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/masterwc_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/masterwc_base.jpg" alt="Master shower room on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Master shower room</h3><span class="area">5.0 m²</span></div><div class="tags"><span>Walk-in shower</span><span>Arched lit niche</span><span>Fluted glass</span></div></div></div></article><article class="room"><div class="photo empty"><b>Shared dressing</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/hers_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/hers_base.jpg" alt="Shared dressing on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Shared dressing</h3><span class="area">9.4 m²</span></div><div class="tags"><span>One room for both</span><span>Wardrobes on three walls</span><span>Full mirror</span></div></div></div></article><article class="room"><div class="photo empty"><b>Prayer room</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/prayer_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/prayer_base.jpg" alt="Prayer room on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Prayer room</h3><span class="area">2.9 m²</span></div><div class="tags"><span>Icon wall, east side</span><span>Candle shelf</span><span>Kneeler</span></div></div></div></article><article class="room"><div class="photo empty"><b>Bedroom 1 and bath</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/kidsa_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/kidsa_base.jpg" alt="Bedroom 1 and bath on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Bedroom 1 and bath</h3><span class="area">15.9 + 3.0 m²</span></div><div class="tags"><span>Own bath</span><span>Real bed, desk</span><span>Guest room early on</span></div></div></div></article><article class="room"><div class="photo empty"><b>Kitchenette</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/kitchenette_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/kitchenette_base.jpg" alt="Kitchenette on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Kitchenette</h3><span class="area">0.7 m²</span></div><div class="tags"><span>Coffee station in the corridor</span><span>Pocket doors, flush when closed</span><span>Drawer fridge + sink</span></div></div></div></article><article class="room"><div class="photo empty"><b>Laundry</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/laundry_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/laundry_base.jpg" alt="Laundry on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Laundry</h3><span class="area">1.9 m²</span></div><div class="tags"><span>Washer + dryer stacked</span><span>Fold-down ironing board</span><span>Drying rack</span></div></div></div></article><article class="room"><div class="photo empty"><b>Kids room (double) and bath</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/kidsb_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/kidsb_base.jpg" alt="Kids room (double) and bath on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Kids room (double) and bath</h3><span class="area">18.4 + 4.2 m²</span></div><div class="tags"><span>Twin beds, bunk later</span><span>Window seat, two desks</span><span>Tub bath inside the room</span></div></div></div></article><article class="room"><div class="photo empty"><b>Playroom</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/playroom_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/playroom_base.jpg" alt="Playroom on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Playroom</h3><span class="area">18.0 m²</span></div><div class="tags"><span>Door from the landing</span><span>Sliding door from the kids room</span><span>Chalk wall + reading nook</span></div></div></div></article><article class="room"><div class="photo empty"><b>Corridor and stair landing</b><span>Image to come</span></div><div class="body"><a class="plan-mini" href="assets/rooms/corridor_base.jpg" target="_blank" rel="noopener"><img src="assets/rooms/corridor_base.jpg" alt="Corridor and stair landing on the plan" loading="lazy"></a><div class="info"><div class="head"><h3>Corridor and stair landing</h3><span class="area">10.5 m²</span></div><div class="tags"><span>Open well, rails only</span><span>Linen cupboard</span><span>Night lights</span></div></div></div></article></div>
+  </section>
+
+  <section aria-label="Prompts">
+    <details>
+      <summary>Prompts for the room images</summary>
+      <div class="builder">
+        <div class="controls">
+          <label for="pb-style">Style<select id="pb-style"></select></label>
+          <label for="pb-room">Room<select id="pb-room"></select></label>
+        </div>
+        <div class="promptbox" id="pb-out" aria-live="polite"></div>
+        <div class="row"><button class="btn" id="pb-copy" type="button">Copy prompt</button><span class="status" id="pb-status"></span></div>
+      </div>
+    </details>
+  </section>
+
+  </div>
+  <div class="panel" role="tabpanel" id="step3" aria-labelledby="t-step3" hidden>
+    <header>
+      <div class="step">Step 3 of 3</div>
+      <h1>Materials, light &amp; joinery</h1>
+      <p>Comes once the style and the kitchen layout are chosen.</p>
+    </header>
+    <div class="next"><img src="assets/kitchen/J_p2.jpg" alt="Travertine and oak samples"><img src="assets/kitchen/A_p2.jpg" alt="Travertine and walnut samples"><img src="assets/kitchen/feat_ovens.jpg" alt="Oak joinery with ovens"></div>
+  </div>
+
+  <div class="panel" role="tabpanel" id="check" aria-labelledby="t-check" hidden>
+    <header>
+      <div class="step">Checklist</div>
+      <h1>Forget nothing</h1>
+      <p>What people get wrong, what they forget, and what we could add. Skim and tick.</p>
+    </header>
+    <div class="chk">
+    <div class="sec-h"><h2>Checklist</h2><span>updated 1 Oct 2026</span></div>
+    <div class="legend"><span><i class="ok"></i>In the plan</span><span><i class="todo"></i>To decide or draw</span><span><i class="idea"></i>Idea</span><span><i class="no"></i>Mistake to avoid</span></div>
+    <div class="cl">
+      <section><h4>Mistakes people regret</h4><ul><li><i class="no"></i>White or cream sofas <small>· fixed: mushroom + leather</small></li><li><i class="no"></i>One ceiling light per room <small>· plan three layers: ambient, task, accent</small></li><li><i class="no"></i>Too few sockets, in the wrong places</li><li><i class="no"></i>Open plan noise and cooking smells <small>· ours has movable partitions</small></li><li><i class="no"></i>AC units placed last <small>· they fix the walls</small></li><li><i class="no"></i>Glossy dark floors in a dusty city</li><li><i class="no"></i>Storage planned after the furniture</li><li><i class="no"></i>Trendy tiles everywhere <small>· keep bold for small rooms</small></li><li><i class="no"></i>Rugs too small for the seating</li><li><i class="no"></i>Curtain tracks forgotten until the ceiling is done</li></ul></section>
+      <section><h4>Kitchen &amp; pantry</h4><ul><li><i class="ok"></i>Work triangle checked, walkways ≥ 1 m</li><li><i class="ok"></i>Hood ducted outside</li><li><i class="ok"></i>Hidden pantry door, appliance garage, chest-height ovens</li><li><i class="todo"></i>Sockets every metre on the worktop + inside the pantry</li><li><i class="todo"></i>Bin and recycling pull-out</li><li><i class="todo"></i>Water filter tap, water point for the fridge</li><li><i class="todo"></i>Gas point and shut-off</li><li><i class="idea"></i>Second fridge/freezer in the pantry</li><li><i class="idea"></i>Charging drawer for phones</li><li><i class="ok"></i>Corridor coffee station behind pocket doors <small>· upstairs</small></li><li><i class="ok"></i>One family table, chairs tucked, stools under the overhang <small>· in round 4</small></li></ul></section>
+      <section><h4>Bathrooms &amp; laundry</h4><ul><li><i class="ok"></i>Shattaf on every WC, wall-hung WCs</li><li><i class="ok"></i>Lit niches, walk-in showers, tub for the kids</li><li><i class="todo"></i>Exhaust fan in every bath without a window</li><li><i class="todo"></i>Floor drain + water inlet + dryer vent in the laundry</li><li><i class="todo"></i>Water heaters: one central or one per wet room</li><li><i class="todo"></i>Backing boards for future grab bars</li><li><i class="idea"></i>Heated towel rail in the master</li><li><i class="idea"></i>Socket inside the vanity cupboard for hairdryer</li><li><i class="ok"></i>Fold-down ironing board in the laundry</li></ul></section>
+      <section><h4>Bedrooms &amp; kids</h4><ul><li><i class="ok"></i>Blackout + sheer in every bedroom</li><li><i class="ok"></i>Wardrobes to the ceiling</li><li><i class="todo"></i>Sockets and USB both sides of every bed</li><li><i class="todo"></i>Two-way switches: door and bedside</li><li><i class="ok"></i>Stair rails, no horizontal bars <small>· gates later</small></li><li><i class="todo"></i>Washable paint, rounded corners, socket covers in kids rooms</li><li><i class="idea"></i>Desk wall wired for a home office until the kids arrive</li><li><i class="idea"></i>Night-light circuit along the corridor</li><li><i class="ok"></i>Bunk-ready double room, window seat</li></ul></section>
+      <section><h4>Entrance, storage &amp; outside</h4><ul><li><i class="ok"></i>Coat cupboard, store, linen cupboard <small>· more storage designed later</small></li><li><i class="todo"></i>Shoe storage + bench at the door</li><li><i class="todo"></i>Pram and bikes: a place for them <small>· storage designed later</small></li><li><i class="todo"></i>Hose taps front and back, outdoor sockets on all sides</li><li><i class="todo"></i>Garden lighting and irrigation points</li><li><i class="todo"></i>Mosquito screens on opening windows</li><li><i class="ok"></i>Water tank, AC units and gas on the side elevations</li><li><i class="idea"></i>Doorbell camera, parcel shelf</li><li><i class="idea"></i>Garden shed for bulk items</li></ul></section>
+      <section><h4>Light, power &amp; tech</h4><ul><li><i class="todo"></i>Lighting plan: ambient, task, accent, dimmers</li><li><i class="todo"></i>Cove light strips and pendants on separate circuits</li><li><i class="todo"></i>Sensor lights in pantry, store, dressing, corridor</li><li><i class="todo"></i>Router in the middle of the house, ethernet to each TV</li><li><i class="todo"></i>Empty conduits for later cables</li><li><i class="ok"></i>AC outdoor units on the side walls, drains to follow</li><li><i class="idea"></i>Smart thermostat and blind motors</li><li><i class="idea"></i>Floor socket under the great-room seating</li><li><i class="idea"></i>CCTV conduits to the four corners</li></ul></section>
+    </div>
+    </div>
+  </div>
+  <div class="panel" role="tabpanel" id="plan" aria-labelledby="t-plan" hidden>
+  <div class="panel-body">
+    <div class="sec-h"><h2>Units plan</h2><span>ground iteration 7 (approved) · first iteration 10 (draft)</span></div>
+    <div class="m3d" data-model="models/house.html"><button type="button" class="open3d">Walk through the house in 3D</button><button type="button" class="full3d">Full screen</button><button type="button" class="close3d" aria-label="Close full screen">✕ Close</button><p class="hint">Pick Ground, First or Both, walk up the stairs, click doors to open them, slide the sun.</p></div>
+
+
+    <div class="sec-h" id="kitchen-plan"><h2>Kitchen + pantry</h2><span>option B · sketch v4</span></div>
+    <a class="bigplan" href="assets/model/kitchen_plan_v3.jpg" target="_blank" rel="noopener"><img src="assets/model/kitchen_plan_v3.jpg" alt="Kitchen and pantry plan, sketch v4" loading="lazy"></a>
+    <div class="real"><a href="assets/model/kitchen_hall.jpg" target="_blank" rel="noopener"><img src="assets/model/kitchen_hall.jpg" alt="Kitchen 3D view: From the hall door" loading="lazy"><span>From the hall door</span></a><a href="assets/model/kitchen_table.jpg" target="_blank" rel="noopener"><img src="assets/model/kitchen_table.jpg" alt="Kitchen 3D view: From the table" loading="lazy"><span>From the table</span></a><a href="assets/model/kitchen_ovens.jpg" target="_blank" rel="noopener"><img src="assets/model/kitchen_ovens.jpg" alt="Kitchen 3D view: Oven wall" loading="lazy"><span>Oven wall</span></a><a href="assets/model/kitchen_pantry.jpg" target="_blank" rel="noopener"><img src="assets/model/kitchen_pantry.jpg" alt="Kitchen 3D view: Pantry" loading="lazy"><span>Pantry</span></a></div>
+    <div class="sec-h" id="ground-plan"><h2>Ground floor, furnished</h2><span>3D round 4 · one table, open stair</span></div>
+    <a class="bigplan" href="assets/model/ground_plan.jpg" target="_blank" rel="noopener"><img src="assets/model/ground_plan.jpg" alt="Ground floor furnished plan" loading="lazy"></a>
+    <div class="flags"><h3>Notes from round 4</h3><ul>
+      <li><b>One table:</b> the guest table left the great room; the front bay keeps the console and plants.</li>
+      <li><b>Hall and stair:</b> the doors to the great room are gone (open 1.59 m opening); the stair is open to the great room behind balusters; the stub beside the stair you circled is removed.</li>
+      <li><b>Kitchen:</b> chairs tucked, peninsula moved 0.75 m; aisles now 0.91 m or more. Hob side door opens on click.</li>
+      <li><b>Outside:</b> garden 15 m to the terrace, 5 m at the entrance, 3 m sides, 2 m wall with a gate. AC units, tank and gas on the side walls. Terrace not covered.</li>
+      <li><b>Columns:</b> only the developer's; F9 removed. Confirm F9 and G9 on site.</li>
+      <li><b>Store aisle</b> 0.63 m, left as approved. <b>Heights</b> all assumed (3.20 ceiling).</li>
+    </ul></div>
+    <div class="sec-h" id="first-plan"><h2>First floor (upper), furnished</h2><span>iteration 10 · 3D round 4</span></div>
+    <a class="bigplan" href="assets/model/first_plan.jpg" target="_blank" rel="noopener"><img src="assets/model/first_plan.jpg" alt="Upper floor furnished plan" loading="lazy"></a>
+    <div class="flags"><h3>Notes from round 4</h3><ul>
+      <li><b>West side window</b> split for the prayer-room wall: part bricked, a new 0.70 m window lights the prayer room; new high window in the kids bath. Both go on the compound request.</li>
+      <li><b>Laundry</b> has no outside wall: extract fan instead of a window. Door swing decides the layout; a sliding door would free space.</li>
+      <li><b>Prayer room</b> is 1.1 m deep as drawn; Daniel will send a plan.</li>
+      <li><b>Kids bath</b> moved 0.52 m north onto Option 2's walls. Kids wardrobe now 2.9 m.</li>
+      <li><b>Master:</b> the 2.70 m front slider is a Juliet window unless a rail is added. Check on site.</li>
+      <li><b>Phone performance</b> not measured on a real phone yet; use the Lite toggle if it stutters.</li>
+    </ul></div>
+
+  </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {"styles": [{"key": "A", "name": "Walnut & Travertine", "words": "warm modern organic style, rich matte walnut joinery, honed travertine, bouclé and linen, brushed brass, espresso and beige palette, quiet luxury"}, {"key": "B", "name": "Olive Heritage", "words": "modern heritage style, olive green painted joinery, oiled oak, cream walls, arched panelling, zellige tiles, aged brass, cosy and crafted"}, {"key": "C", "name": "Cairo Mediterranean", "words": "Mediterranean soft minimal style, limewash plaster walls, soft arches, honed travertine, light oak, linen and rattan, terracotta and sage accents"}, {"key": "S", "name": "Warm Scandinavian", "words": "warm Scandinavian style, pale white oak, soft white walls, pale grey stone, wool and linen, matte black details, light and calm"}, {"key": "J", "name": "Japandi", "words": "Japandi style, low smoked and light oak furniture, washi paper lamps, charcoal stone, raw linen, slatted oak, serene and minimal"}, {"key": "W", "name": "Wabi-sabi", "words": "wabi-sabi style, raw lime plaster walls in warm clay tones, reclaimed wood, rough stone, crumpled natural linen, handmade clay vessels, earthy and calm"}], "test": null, "rooms": [{"key": "vestibule", "name": "Entrance (outdoor)", "prompt": "a covered outdoor villa entrance porch with a stone bench, planters, wall lanterns and a solid timber front door"}, {"key": "hall", "name": "Entrance hall and lobby", "prompt": "a villa entrance hall with a feature staircase, a console and a gallery wall"}, {"key": "guesttoilet", "name": "Guest toilet", "prompt": "a small luxurious guest powder room with a floating stone vanity, wall-mounted tap and backlit mirror"}, {"key": "great", "name": "Great room", "prompt": "a large open villa great room with a gathering seating area for eight and a separate TV lounge"}, {"key": "kitchen", "name": "Kitchen and family dining", "prompt": "an L-shaped villa kitchen with a peninsula breakfast bar, a tall appliance column, an appliance garage and a family dining table for six"}, {"key": "pantry", "name": "Walk-in pantry", "prompt": "a walk-in butler's pantry with floor-to-ceiling shelving, glass jars, an appliance shelf and warm LED strip lights"}, {"key": "store", "name": "Store (outside door)", "prompt": "a small organised garden store room with metal shelving and wall hooks"}, {"key": "masterlobby", "name": "Master lobby", "prompt": "a small master suite entrance lobby with flush panelled doors and an art niche"}, {"key": "master", "name": "Master bedroom", "prompt": "a master bedroom with a full-width headboard wall with integrated reading lights, a concealed TV and a reading chair"}, {"key": "masterwc", "name": "Master shower room", "prompt": "a walk-in shower room with a linear drain, lit niche, wall-hung WC and floating vanity"}, {"key": "hers", "name": "Hers dressing", "prompt": "a woman's walk-in dressing room with glass-front lit wardrobes, a vanity by a window and a shoe wall"}, {"key": "his", "name": "His dressing", "prompt": "a compact men's dressing room with a long wardrobe, valet rod and watch drawer"}, {"key": "kitchenette", "name": "Kitchenette", "prompt": "a compact upstairs coffee station hidden behind pocket doors with a drawer fridge and small sink"}, {"key": "laundry", "name": "Laundry", "prompt": "a compact laundry room with washer and dryer, folding counter, pull-out drying rack and hidden broom storage"}, {"key": "prayer", "name": "Prayer room", "prompt": "a small calm Christian home prayer room with an icon wall, candles, a kneeler and a book shelf"}, {"key": "kidsa", "name": "Kids room A and bath", "prompt": "a child's bedroom that doubles as a guest room with a daybed and trundle, a desk and a pin-board wall"}, {"key": "kidsb", "name": "Kids room B and bath", "prompt": "a shared children's bedroom for two with twin beds, twin desks and a window seat"}, {"key": "playroom", "name": "Hidden playroom", "prompt": "a hidden children's playroom behind a bookcase door with a reading nook, chalk wall and toy storage"}, {"key": "corridor", "name": "Corridor and stair landing", "prompt": "an upstairs villa corridor with a picture-rail gallery and low night lights"}]};
+const $ = s => document.querySelector(s);
+DATA.styles.forEach(s => $('#pb-style').insertAdjacentHTML('beforeend', `<option value="${s.key}">${s.name}</option>`));
+DATA.rooms.forEach(r => $('#pb-room').insertAdjacentHTML('beforeend', `<option value="${r.key}">${r.name}</option>`));
+if (DATA.test) $('#pb-style').value = DATA.test;
+function build() {
+  const s = DATA.styles.find(x => x.key === $('#pb-style').value), r = DATA.rooms.find(x => x.key === $('#pb-room').value);
+  $('#pb-out').textContent = `Interior photograph of ${r.prompt}, ${s.words}, editorial architectural photography, natural light, no people --ar 4:3 --style raw`;
+  $('#pb-status').textContent = '';
+}
+['#pb-style', '#pb-room'].forEach(x => $(x).addEventListener('change', build));
+$('#pb-copy').addEventListener('click', () => {
+  const fallback = () => { const g = document.createRange(); g.selectNodeContents($('#pb-out')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(g); $('#pb-status').textContent = 'Selected, press copy'; };
+  try { navigator.clipboard.writeText($('#pb-out').textContent).then(() => $('#pb-status').textContent = 'Copied', fallback); } catch (e) { fallback(); }
+});
+build();
+
+(() => {
+  const openFs = async box => {
+    if (!box.classList.contains('on')) box.querySelector('button.open3d').click();
+    box.classList.add('fs'); document.body.classList.add('fs-lock');
+    try { if (box.requestFullscreen && !document.fullscreenElement) await box.requestFullscreen(); } catch (e) {}
+  };
+  const closeFs = box => {
+    box.classList.remove('fs'); document.body.classList.remove('fs-lock');
+    try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
+  };
+  document.querySelectorAll('.m3d').forEach(box => {
+    box.querySelector('.full3d')?.addEventListener('click', () => openFs(box));
+    box.querySelector('.close3d')?.addEventListener('click', () => closeFs(box));
+  });
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) document.querySelectorAll('.m3d.fs').forEach(b => { b.classList.remove('fs'); document.body.classList.remove('fs-lock'); }); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.m3d.fs').forEach(closeFs); });
+})();
+
+(() => {
+  // mood boards per room: MB[room] = list of style keys that have 4 images at assets/mb/<room>_<style>_<n>.jpg
+  const MB = {"kitchen": ["J", "A", "B", "C", "S"], "great": ["J", "A", "B", "C", "S"], "guesttoilet": ["J", "A", "B", "C", "S"], "hall": ["J", "A", "B", "C", "S"], "hers": ["J", "A", "B", "C", "S"], "his": ["J", "A", "B", "C", "S"], "kitchenette": ["J", "A", "B", "C", "S"], "laundry": ["J", "A", "B", "C", "S"], "master": ["J", "A", "B", "C", "S"], "masterlobby": ["J", "A", "B", "C", "S"], "masterwc": ["J", "A", "B", "C", "S"], "pantry": ["J", "A", "B", "C", "S"], "prayer": ["J", "A", "B", "C", "S"], "store": ["J", "A", "B", "C", "S"], "vestibule": ["J", "A", "B", "C", "S"]};
+  // real-layout views from the 3D models: V3[room] = [image paths]
+  const V3 = {"kitchen": ["assets/model/kitchen_hall.jpg", "assets/model/kitchen_table.jpg", "assets/model/ground_kitchen_1.jpg", "assets/model/ground_kitchen_2.jpg"], "vestibule": ["assets/model/ground_entrance_1.jpg", "assets/model/ground_entrance_2.jpg", "assets/model/ground_street_1.jpg", "assets/model/ground_street_2.jpg"], "hall": ["assets/model/ground_hall_1.jpg", "assets/model/ground_hall_2.jpg", "assets/model/ground_stairwell_1.jpg", "assets/model/ground_stairwell_2.jpg"], "guesttoilet": ["assets/model/ground_guesttoilet_1.jpg", "assets/model/ground_guesttoilet_2.jpg"], "great": ["assets/model/ground_great_1.jpg", "assets/model/ground_great_2.jpg", "assets/model/ground_dining_1.jpg", "assets/model/ground_garden_1.jpg"], "pantry": ["assets/model/ground_pantry_1.jpg", "assets/model/ground_pantry_2.jpg"], "store": ["assets/model/ground_store_1.jpg", "assets/model/ground_store_2.jpg"], "master": ["assets/model/first_master_1.jpg", "assets/model/first_master_2.jpg", "assets/model/first_terrace_1.jpg", "assets/model/first_masterlobby_1.jpg"], "masterwc": ["assets/model/first_mastershower_1.jpg", "assets/model/first_mastershower_2.jpg"], "hers": ["assets/model/first_dressing_1.jpg", "assets/model/first_dressing_2.jpg"], "prayer": ["assets/model/first_prayer_1.jpg", "assets/model/first_prayer_2.jpg"], "kidsa": ["assets/model/first_bedroom1_1.jpg", "assets/model/first_bedroom1_2.jpg", "assets/model/first_bath1_1.jpg", "assets/model/first_bath1_2.jpg"], "kitchenette": ["assets/model/first_kitchenette_1.jpg", "assets/model/first_kitchenette_2.jpg"], "laundry": ["assets/model/first_laundry_1.jpg", "assets/model/first_laundry_2.jpg"], "kidsb": ["assets/model/first_kidsb_1.jpg", "assets/model/first_kidsb_2.jpg", "assets/model/first_kidsbentry_1.jpg", "assets/model/first_bbath_1.jpg"], "playroom": ["assets/model/first_playroom_1.jpg", "assets/model/first_playroom_2.jpg"], "corridor": ["assets/model/first_corridor_1.jpg", "assets/model/first_corridor_2.jpg", "assets/model/first_stairwell_1.jpg", "assets/model/first_stairwell_2.jpg"]};
+  const NAMES = { J: 'Japandi', A: 'Walnut & Travertine', B: 'Olive Heritage', C: 'Cairo Mediterranean', S: 'Warm Scandinavian' };
+  let style = 'J';
+  const cards = [...document.querySelectorAll('#step2 article.room')].map(a => {
+    const m = (a.querySelector('.plan-mini img')?.getAttribute('src') || '').match(/rooms\/(\w+)_base/);
+    return { a, key: m ? m[1] : null, name: a.querySelector('h3')?.textContent || '' };
+  });
+  const paint = () => cards.forEach(({ a, key, name }) => {
+    if (!key) return;
+    const old = a.querySelector('.photo, .mb'); const has = (MB[key] || []).includes(style);
+    let box;
+    if (has) {
+      box = document.createElement('div'); box.className = 'mb';
+      const src = key === 'kitchen' ? (n => `assets/kitchen/${style}_${['m0','m1','m2','p0'][n]}.jpg`) : (n => `assets/mb/${key}_${style}_${n}.jpg`);
+      box.innerHTML = `<a class="main" href="${src(0)}" target="_blank" rel="noopener"><img src="${src(0)}" alt="${name}, ${NAMES[style]}" loading="lazy"></a><div class="vars">${[0,1,2,3].map(n => `<button type="button" aria-pressed="${n === 0}" aria-label="Option ${n + 1}"><img src="${src(n)}" alt="" loading="lazy"></button>`).join('')}</div>`;
+      box.querySelectorAll('.vars button').forEach((b, n) => b.addEventListener('click', () => { const im = box.querySelector('.main img'); im.src = src(n); box.querySelector('.main').href = src(n); box.querySelectorAll('.vars button').forEach((x, k) => x.setAttribute('aria-pressed', k === n)); }));
+    } else {
+      box = document.createElement('div'); box.className = 'photo empty'; box.innerHTML = `<b>${name}</b><span>Mood board on its way</span>`;
+    }
+    old.replaceWith(box);
+    a.querySelector('.real3d')?.remove();
+    if (V3[key]) { const r = document.createElement('div'); r.className = 'real3d'; r.innerHTML = V3[key].map(p => `<a href="${p}" target="_blank" rel="noopener"><img src="${p}" alt="${name}, 3D view" loading="lazy"><span class="b3">3D</span></a>`).join(''); a.appendChild(r); }
+  });
+  const count = () => document.querySelectorAll('#step2 section[aria-label$="floor rooms"]').forEach(sec => {
+    const arts = [...sec.querySelectorAll('article.room')]; const done = arts.filter(a => a.querySelector('.mb, a.photo')).length;
+    const sp = sec.querySelector('.sec-h span'); if (sp) sp.textContent = `${done} of ${arts.length} rooms have mood boards`;
+  });
+    document.querySelectorAll('.styleswitch button').forEach(b => b.addEventListener('click', () => {
+    style = b.dataset.s; document.querySelectorAll('.styleswitch button').forEach(x => x.setAttribute('aria-checked', x === b));
+    paint(); count();
+  }));
+  paint(); count();
+})();
+
+(() => {
+  const cache = {};
+  const load = async box => {
+    if (box.classList.contains('on')) return;
+    const btn = box.querySelector('button'); btn.textContent = 'Loading the 3D model…'; btn.disabled = true;
+    try {
+      const src = box.dataset.model;
+      cache[src] = cache[src] || await (await fetch(src)).text();
+      document.querySelectorAll('.m3d.on').forEach(b => { b.querySelector('iframe')?.remove(); b.classList.remove('on'); const x = b.querySelector('button'); x.hidden = false; x.disabled = false; x.textContent = x.dataset.label; });
+      const f = document.createElement('iframe'); f.title = '3D model'; f.srcdoc = cache[src];
+      box.prepend(f); box.classList.add('on'); btn.hidden = true;
+    } catch (e) { btn.disabled = false; btn.textContent = 'Could not load the model. Tap to try again'; }
+  };
+  document.querySelectorAll('.m3d:not(.pending)').forEach(box => { const b = box.querySelector('button'); b.dataset.label = b.textContent; b.addEventListener('click', () => load(box)); });
+})();
+
+(() => {
+  const tabs = [...document.querySelectorAll('.tabbar [role=tab]')];
+  const show = (id, scroll) => { tabs.forEach(b => { const on = b.getAttribute('aria-controls') === id; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; document.getElementById(b.getAttribute('aria-controls')).hidden = !on; }); if (scroll) window.scrollTo({ top: 0 }); };
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => { show(b.getAttribute('aria-controls'), true); try { history.replaceState(null, '', '#' + b.getAttribute('aria-controls')); } catch (e) {} });
+    b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; n.click(); n.focus(); e.preventDefault(); } });
+  });
+  const h = location.hash.slice(1);
+  if (['step1', 'step2', 'step3', 'plan', 'check'].includes(h)) show(h);
+})();
+
+(() => {
+  const tabs = [...document.querySelectorAll('.tabs [role=tab]')];
+  const pick = t => { tabs.forEach(b => { const on = b === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; document.getElementById(b.getAttribute('aria-controls')).hidden = !on; }); };
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => pick(b));
+    b.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; pick(n); n.focus(); e.preventDefault(); } });
+  });
+})();
+</script>
+
+</body>
+</html>
