@@ -458,7 +458,7 @@ function syncOrbitFromCamera() {
   const o = camera.position.clone().sub(orbit.target); orbit.r = o.length();
   orbit.ph = Math.acos(THREE.MathUtils.clamp(o.y / orbit.r, -1, 1)); orbit.th = Math.atan2(o.x, o.z);
 }
-const toPlan = v => [v.x + C[0], -v.z + C[1]];
+const toPlan = v => [v.x + C[0], -v.z + C[1]], fromPlan = q => ({ x: q[0] - C[0], z: -(q[1] - C[1]) });
 // walking surface: storey floors (inside the envelope, outside the well) and stair treads. You can step up or down at
 // most STEP; a bigger drop (the well, a landing edge) blocks like a wall, so you follow the stair up and down.
 const STEP = 0.4, R = 0.2;
@@ -486,6 +486,14 @@ function blockedAt(p, feet) {                       // -> null if blocked, else 
   });
   return hit ? null : s;
 }
+function freeNear(p, feet) {                        // nearest unblocked point within 2 m (views are shot close to walls)
+  if (blockedAt(p, feet) != null) return p;
+  for (let r = 0.1; r <= 2.0; r += 0.1) for (let a = 0; a < 360; a += 15) {
+    const q = [p[0] + r * Math.cos(a * Math.PI / 180), p[1] + r * Math.sin(a * Math.PI / 180)];
+    if (blockedAt(q, feet) != null) return q;
+  }
+  return p;
+}
 const levelOf = () => LV[floorMode] || [...S.levels].reverse().find(L => camera.position.y > L.z + 0.5 && camera.position.y < L.z + L.ceil) || S.levels[0];   // 'Both': the storey the camera is in
 const levelZ = () => levelOf().z;
 function setMode(m) {
@@ -498,6 +506,7 @@ function setMode(m) {
       const c = Object.values(S.cameras).find(c => c.floor === levelOf().k).views[0];
       camera.position.copy(P(c.pos[0], c.pos[1], 0)); p = toPlan(camera.position); s = blockedAt(p, lz + 0.05) ?? lz;
     }
+    { const q = freeNear(p, lz + 0.05); if (q !== p) { const w = fromPlan(q); camera.position.x = w.x; camera.position.z = w.z; s = blockedAt(q, lz + 0.05) ?? s; } }
     walk.base = walk.feet = s; walk.eye = S.eye; camera.position.y = s + walk.eye;
     walk.yaw = Math.atan2(dir.x, dir.z); walk.pitch = 0; applyWalk();
   } else { orbit.target = camera.position.clone().add(dir.multiplyScalar(3)); syncOrbitFromCamera(); }
@@ -513,7 +522,9 @@ function preset(key, n) {
   if (mode === 'orbit') { orbit.target = look; syncOrbitFromCamera(); applyOrbit(); }
   else {
     const d = look.clone().sub(camera.position); walk.yaw = Math.atan2(d.x, d.z); walk.pitch = Math.atan2(d.y, Math.hypot(d.x, d.z));
-    const lz = LV[c.floor].z, s = blockedAt(toPlan(camera.position), lz + 0.05) ?? lz;
+    const lz = LV[c.floor].z, p0 = toPlan(camera.position), q = freeNear(p0, lz + 0.05);
+    if (q !== p0) { const w = fromPlan(q); camera.position.x = w.x; camera.position.z = w.z; }
+    const s = blockedAt(q, lz + 0.05) ?? lz;
     walk.base = walk.feet = s; walk.eye = v.pos[2] - s; applyWalk();
   }
   document.querySelectorAll('#views button').forEach(b => b.classList.toggle('on', b.dataset.k === key + ':' + n));
@@ -526,6 +537,7 @@ addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; if (mode ==
 addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
 function moveBy(f, s) {
   const fx = Math.sin(walk.yaw), fz = Math.cos(walk.yaw), dx = f * fx - s * fz, dz = f * fz + s * fx, p = camera.position;
+  if (blockedAt(toPlan(p), walk.base) == null) { p.x += dx; p.z += dz; return; }   // stuck inside something: walk free
   let b = blockedAt(toPlan({ x: p.x + dx, z: p.z }), walk.base); if (b != null) { p.x += dx; walk.base = b; }
   b = blockedAt(toPlan({ x: p.x, z: p.z + dz }), walk.base); if (b != null) { p.z += dz; walk.base = b; }
 }
