@@ -58,6 +58,10 @@
   @media (pointer: coarse) and (min-width: 700px) { body.walk #joy { display: block; } button { min-height: 40px; } }
   #minimap { display: none; position: absolute; left: 12px; bottom: calc(160px + env(safe-area-inset-bottom)); border: 1px solid #cfc6b8; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
   #minimap canvas { display: block; }
+  #maptab { position: absolute; left: 12px; bottom: calc(160px + env(safe-area-inset-bottom)); z-index: 3; font: 600 .8rem system-ui, sans-serif; background: rgba(255,255,255,.92); color: #2b2621; border: 1px solid #cfc6b8; border-radius: 6px; padding: .45rem .7rem; min-height: 36px; cursor: pointer; display: none; }
+  @media (max-width: 699px) { #minimap { left: 12px; width: 108px; } #minimap canvas { width: 100%; height: auto; } }
+  @media (min-width: 700px) { #maptab { bottom: 12px; left: auto; right: 12px; } }
+  .shot #maptab { display: none !important; }
   #roomname { position: absolute; top: 18%; left: 50%; transform: translateX(-50%); font: 600 22px/1.2 "Segoe UI", system-ui, sans-serif; color: #fff;
               text-shadow: 0 1px 6px rgba(0,0,0,.55); pointer-events: none; opacity: 0; transition: none; white-space: nowrap; }
   #time { flex: 1; min-width: 120px; } #time-l { min-width: 44px; font-variant-numeric: tabular-nums; }
@@ -219,6 +223,11 @@ const mixC = (a, b, t) => '#' + new THREE.Color(a).lerp(new THREE.Color(b), t).g
 function makeMiniMap(levels, plans, rooms) {
   const box = document.createElement('div'); box.id = 'minimap'; const cv = document.createElement('canvas'), name = document.createElement('div'); name.id = 'roomname';
   box.appendChild(cv); document.body.appendChild(box); document.body.appendChild(name);
+  const tab = document.createElement('button'); tab.id = 'maptab'; tab.type = 'button'; document.body.appendChild(tab);
+  let mapOn = !(window.innerWidth < 700); try { const v = localStorage.getItem('c37map'); if (v !== null) mapOn = v === '1'; } catch (e) {}
+  const label = () => { tab.textContent = mapOn ? 'Hide map' : 'Map'; };
+  tab.addEventListener('click', () => { mapOn = !mapOn; try { localStorage.setItem('c37map', mapOn ? '1' : '0'); } catch (e) {} label(); });
+  label();
   const W = 150, scale = {}, imgs = {};
   for (const L of levels) {
     const pl = plans[L.k]; if (!pl) continue; const [x0, y0, x1, y1] = pl.box, k = W / (x1 - x0), H = Math.round((y1 - y0) * k);
@@ -231,7 +240,11 @@ function makeMiniMap(levels, plans, rooms) {
   let lastRoom = '', fadeT = 0;
   return {
     update(lv, p, yaw, show) {
-      box.style.display = show && imgs[lv] ? 'block' : 'none'; if (!show || !imgs[lv]) { name.style.opacity = 0; return; }
+      tab.style.display = show && imgs[lv] ? 'block' : 'none';
+      box.style.display = show && imgs[lv] && mapOn ? 'block' : 'none';
+      if (show && imgs[lv] && mapOn) { tab.style.bottom = `calc(${box.offsetHeight + 8}px + ${window.innerWidth < 700 ? '160px' : '12px'} + env(safe-area-inset-bottom))`; } else { tab.style.bottom = ''; }
+      if (!show || !imgs[lv]) { name.style.opacity = 0; return; }
+      if (!mapOn) { const r0 = rooms.find(r => r.lv === lv && inPoly(p, r.pts)), n0 = r0 ? r0.n : ''; if (n0 !== lastRoom) { lastRoom = n0; name.textContent = n0; fadeT = performance.now(); } const age0 = (performance.now() - fadeT) / 1000; name.style.opacity = n0 ? (age0 < 0.4 ? age0 / 0.4 : age0 < 2.6 ? 1 : Math.max(0, 1 - (age0 - 2.6) / 0.8)) : 0; return r0; }
       const s = scale[lv]; cv.width = W; cv.height = s.H; const g = cv.getContext('2d'); g.drawImage(imgs[lv], 0, 0);
       const x = (p[0] - s.x0) * s.k, y = (s.y1 - p[1]) * s.k; g.fillStyle = '#c0392b'; g.beginPath(); g.arc(x, y, 4, 0, 6.3); g.fill();
       g.strokeStyle = '#c0392b'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.sin(yaw) * 14, y + Math.cos(yaw) * 14); g.stroke();
@@ -660,7 +673,7 @@ $('close').onclick = closeSheet;
 addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight); if (composer) composer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
 // extras: time slider, figures (E9), sound (E10), quality (E11), mini-map + room names (E8)
 $('time').oninput = e => setTime(+e.target.value);
-let figOn = !SHOT || qs.get('fig') === '1';
+let figOn = qs.get('fig') === '1';
 function setFigures(v) { figOn = v; if (groups.figure) groups.figure.visible = v; $('t-fig').textContent = 'Figures: ' + (v ? 'on' : 'off'); $('t-fig').classList.toggle('on', v); }
 $('t-fig').onclick = () => setFigures(!figOn); if (!groups.figure) $('t-fig').classList.add('hidden');
 const SND = makeSound(); function sfx(k) { if (k === 'door') SND.door(); }
