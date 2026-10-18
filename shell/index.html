@@ -14,7 +14,7 @@ button.on{background:var(--on);color:#fff;border-color:var(--on)}
 #tip{position:fixed;left:12px;top:40px;font-size:12px;opacity:.65}
 </style></head><body>
 <canvas id="c"></canvas>
-<header><b>C37-38 · shell</b><span>draft · walls, stair, slabs, roof</span></header>
+<header><b>C37-38 · shell</b><span>draft v2 · shell from the checked model</span></header>
 <div id="tip">Drag to turn · pinch to zoom · two fingers to move</div>
 <nav>
  <button data-v="all" class="on">Whole house</button>
@@ -26,82 +26,78 @@ button.on{background:var(--on);color:#fff;border-color:var(--on)}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (async () => {
-const H = await (await fetch('house.json', {cache: 'no-store'})).json();
+const H = await (await fetch('house_v2.json', {cache: 'no-store'})).json();
 const canvas = document.getElementById('c');
 const R = new THREE.WebGLRenderer({canvas, antialias: true}); R.outputEncoding = THREE.sRGBEncoding; R.setPixelRatio(Math.min(devicePixelRatio, 2));
 R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf4f1ec);
 const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
 const ctl = new THREE.OrbitControls(cam, canvas); ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI * 0.49;
-const [ex0, ey0, ex1, ey1] = H.envelope, C = H.heights.clear, S = H.heights.slab;
+const [ex0, ey0, ex1, ey1] = H.envelope, C = H.heights.clear, S = H.heights.slab, ZF = H.heights.level.first;
 const cx = (ex0 + ex1) / 2, cy = (ey0 + ey1) / 2;
 const root = new THREE.Group(); root.position.set(-cx, 0, cy); scene.add(root);
-const M = (c, o = {}) => new THREE.MeshStandardMaterial(Object.assign({color: c, roughness: .9}, o));
-const mat = {wall: M(0xece6db), head: M(0xe2dccf), col: M(0xd8c9ab), slab: M(0xcfc8bb), glass: M(0x8fb6c9, {transparent: true, opacity: .4}),
-  step: M(0xa37c55), roof: M(0xb8603a, {side: THREE.DoubleSide}), grass: M(0xb9c79a)};
-const groups = {ground: new THREE.Group(), first: new THREE.Group(), roof: new THREE.Group(), cut: []};
-Object.values(groups).forEach(g => g.isObject3D && root.add(g));
-function box(g, x0, y0, z0, x1, y1, z1, m, cuttable) {
-  const b = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(x1 - x0), Math.abs(z1 - z0), Math.abs(y1 - y0)), m);
-  b.position.set((x0 + x1) / 2, (z0 + z1) / 2, -(y0 + y1) / 2); b.castShadow = b.receiveShadow = true; g.add(b);
-  if (cuttable) groups.cut.push({b, z0, z1}); return b;
+const COL = {wall: 0xece6db, render: 0xe6dccb, glass: 0x8fb6c9, metal: 0x3b3b3b, black: 0x2a2a2a, bronze: 0x6b5a45, white: 0xf3f1ec, doorDark: 0x4a3a2c,
+  tread: 0xa37c55, fascia: 0xe2dccf, tile: 0xb8603a, tileDark: 0x8e4628, stoneOut: 0xcfc6b5, plinth: 0xcfc6b5};
+const mats = {};
+const mat = m => mats[m] || (mats[m] = new THREE.MeshStandardMaterial(Object.assign({color: COL[m] ?? 0xcccccc, roughness: .9, side: THREE.DoubleSide},
+  m === 'glass' ? {transparent: true, opacity: .4} : {})));
+const parts = [];          // {mesh, z0, z1, lvl}
+const lvlOf = z0 => z0 >= ZF + C - 0.05 ? 'roof' : z0 >= ZF - 0.05 ? 'f' : 'g';
+function addMesh(geo, m, z0, z1, forceLvl) {
+  const mesh = new THREE.Mesh(geo, mat(m)); mesh.castShadow = mesh.receiveShadow = m !== 'glass';
+  mesh.position.y = z0; root.add(mesh); parts.push({mesh, z0, z1, lvl: forceLvl || lvlOf(z0)}); return mesh;
 }
-function slab(g, z0, z1, hole) {
-  const s = new THREE.Shape([[ex0, ey0], [ex1, ey0], [ex1, ey1], [ex0, ey1]].map(p => new THREE.Vector2(p[0], -p[1])));
-  if (hole) s.holes.push(new THREE.Path([[hole[0], hole[1]], [hole[2], hole[1]], [hole[2], hole[3]], [hole[0], hole[3]]].map(p => new THREE.Vector2(p[0], -p[1]))));
-  const geo = new THREE.ExtrudeGeometry(s, {depth: z1 - z0, bevelEnabled: false}); geo.rotateX(Math.PI / 2); geo.translate(0, z1, 0);
-  const m = new THREE.Mesh(geo, mat.slab); m.receiveShadow = m.castShadow = true; g.add(m);
+for (const it of H.boxes) {
+  const [x0, y0, z0, x1, y1, z1] = it.b, h = Math.max(z1 - z0, 0.005);
+  const g = new THREE.BoxGeometry(Math.max(Math.abs(x1 - x0), .005), h, Math.max(Math.abs(y1 - y0), .005));
+  g.translate((x0 + x1) / 2, h / 2, -(y0 + y1) / 2); addMesh(g, it.m, z0, z1);
 }
-box(root, ex0 - 14, ey0 - 12, -0.32, ex1 + 6, ey1 + 16, -0.3, mat.grass);
-for (const fl of ['ground', 'first']) {
-  const F = H.floors[fl], z = F.level, g = groups[fl];
-  slab(g, z - (fl === 'ground' ? 0.3 : S), z, fl === 'first' ? H.stair.well : null);
-  for (const [x0, y0, x1, y1] of F.wall_rects) box(g, x0, y0, z, x1, y1, z + C, mat.wall, true);
-  for (const o of F.openings) {
-    const [x0, y0, x1, y1] = o.rect;
-    box(g, x0, y0, z + o.head, x1, y1, z + C, mat.head, true);
-    if (o.sill > 0) box(g, x0, y0, z, x1, y1, z + o.sill, mat.head);
-    if (o.kind === 'window') {
-      const t = .015;
-      if (x1 - x0 > y1 - y0) { const m = (y0 + y1) / 2; box(g, x0, m - t, z + o.sill, x1, m + t, z + o.head, mat.glass, true); }
-      else { const m = (x0 + x1) / 2; box(g, m - t, y0, z + o.sill, m + t, y1, z + o.head, mat.glass, true); }
-    }
-  }
-  if (fl === 'ground') for (const s of H.stair.steps) { const [a, b, c, d] = s.rect; box(g, a, b, s.z0, c, d, s.z1, mat.step); }
+for (const it of H.prisms) {
+  const sh = new THREE.Shape(it.p.map(p => new THREE.Vector2(p[0], p[1])));
+  const h = Math.max(it.z[1] - it.z[0], .005), g = new THREE.ExtrudeGeometry(sh, {depth: h, bevelEnabled: false});
+  g.rotateX(-Math.PI / 2); addMesh(g, it.m, it.z[0], it.z[1]);
 }
-{ const z = H.floors.first.level + C, g = groups.roof; slab(g, z, z + S);
-  const o = .6, X0 = ex0 - o, X1 = ex1 + o, Y0 = ey0 - o, Y1 = ey1 + o; box(g, X0, Y0, z + S, X1, Y1, z + S + .18, mat.head);
-  const zz = z + S + .18, w = (X1 - X0) / 2, h = w * Math.tan(Math.PI / 6), rx = (X0 + X1) / 2;
-  const P = [[X0, Y0, zz], [X1, Y0, zz], [X1, Y1, zz], [X0, Y1, zz], [rx, Y0 + w, zz + h], [rx, Y1 - w, zz + h]].map(([x, y, q]) => [x, q, -y]);
-  const pos = []; for (const t of [[0, 1, 4], [1, 2, 5], [1, 5, 4], [2, 3, 5], [3, 0, 4], [3, 4, 5]]) for (const i of t) pos.push(...P[i]);
-  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.computeVertexNormals();
-  const m = new THREE.Mesh(geo, mat.roof); m.castShadow = true; g.add(m); }
+for (const it of H.faces) {
+  const P = it.f3, pos = [];
+  for (let k = 1; k < P.length - 1; k++) for (const q of [P[0], P[k], P[k + 1]]) pos.push(q[0], q[2], -q[1]);
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
+  const mesh = new THREE.Mesh(g, mat(it.m)); mesh.castShadow = true; root.add(mesh); parts.push({mesh, z0: 99, z1: 99, lvl: 'roof', face: true});
+}
+function slab(z0, z1, holes, lvl) {
+  const s = new THREE.Shape([[ex0, ey0], [ex1, ey0], [ex1, ey1], [ex0, ey1]].map(p => new THREE.Vector2(p[0], p[1])));
+  for (const h of holes || []) s.holes.push(new THREE.Path(h.map(p => new THREE.Vector2(p[0], p[1]))));
+  const g = new THREE.ExtrudeGeometry(s, {depth: z1 - z0, bevelEnabled: false}); g.rotateX(-Math.PI / 2);
+  const m = addMesh(g, 'plinth', z0, z1, lvl); m.material = new THREE.MeshStandardMaterial({color: 0xcfc8bb, roughness: .95});
+}
+slab(-0.3, 0, null, 'g'); slab(ZF - S, ZF, H.levels[1].holes, 'f'); slab(ZF + C, ZF + C + S, null, 'roof');
+{ const g = new THREE.BoxGeometry(40, .02, 44); g.translate(0, -.32, 0);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({color: 0xb9c79a, roughness: 1})); m.receiveShadow = true; scene.add(m); }
 scene.add(new THREE.HemisphereLight(0xffffff, 0x9c8f7a, 0.55));
 const sun = new THREE.DirectionalLight(0xfff1dd, 0.75); sun.position.set(-18, 30, 14); sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left: -22, right: 22, top: 22, bottom: -22, far: 90}); scene.add(sun);
 let view = 'all', cut = false;
 function apply() {
-  groups.ground.visible = true; groups.first.visible = view !== 'ground'; groups.roof.visible = view === 'all' && !cut;
-  const top = view === 'ground' ? 0 : view === 'first' ? H.floors.first.level : -1;
-  for (const {b, z0, z1} of groups.cut) {
-    const lvl = z0 >= H.floors.first.level - 0.01 ? H.floors.first.level : 0;
-    const limit = cut ? lvl + 1.2 : Infinity;
-    if (z0 >= limit) { b.visible = false; continue; }
-    b.visible = true; const zt = Math.min(z1, limit); b.scale.y = (zt - z0) / (z1 - z0); b.position.y = (z0 + zt) / 2;
+  for (const p of parts) {
+    const {mesh, z0, z1, lvl} = p;
+    let vis = view === 'all' ? !(cut && lvl === 'roof') : view === 'ground' ? lvl === 'g' : lvl !== 'roof';
+    if (!vis) { mesh.visible = false; continue; }
+    if (p.face) { mesh.visible = true; continue; }
+    const base = lvl === 'f' ? ZF : 0, limit = cut && lvl !== 'roof' ? base + 1.2 : Infinity;
+    if (z0 >= limit) { mesh.visible = false; continue; }
+    mesh.visible = true; const zt = Math.min(z1, limit); mesh.scale.y = Math.max((zt - z0) / Math.max(z1 - z0, 1e-3), 1e-3);
   }
   document.querySelectorAll('nav button[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === view));
   document.getElementById('cut').classList.toggle('on', cut);
   home();
 }
-document.querySelectorAll('nav button[data-v]').forEach(b => b.onclick = () => { view = b.dataset.v; if (view !== 'all') cut = true; apply(); });
-document.getElementById('cut').onclick = () => { cut = !cut; apply(); };
 function home() {
   const portrait = innerWidth < innerHeight, k = portrait ? 1.6 : 1.0;
-  const ty = view === 'first' ? H.floors.first.level : view === 'ground' ? 0 : 3;
+  const ty = view === 'first' ? ZF : view === 'ground' ? 0 : 3;
   ctl.target.set(0, ty, 0);
-  if (view === 'all') cam.position.set(-20 * k, 15 * k + ty, 22 * k);
-  else cam.position.set(-9 * k, 22 * k + ty, 11 * k);
+  if (view === 'all') cam.position.set(-20 * k, 15 * k + ty, 22 * k); else cam.position.set(-9 * k, 22 * k + ty, 11 * k);
 }
+document.querySelectorAll('nav button[data-v]').forEach(b => b.onclick = () => { view = b.dataset.v; cut = view !== 'all'; apply(); });
+document.getElementById('cut').onclick = () => { cut = !cut; apply(); };
 function size() { const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.fov = w < h ? 55 : 40; cam.updateProjectionMatrix(); }
 addEventListener('resize', () => { size(); home(); }); size(); apply();
 (function loop() { ctl.update(); R.render(scene, cam); requestAnimationFrame(loop); })();
