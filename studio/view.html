@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>C37-38 studio · 3D</title>
+<style>
+:root{--bg:#f4f1ec;--ink:#3a2e22;--chip:#fffaf2;--line:#d9cfbf;--on:#5a3d2b}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
+#c{position:fixed;left:0;top:0;width:100vw;height:100vh;display:block;touch-action:none}
+header{position:fixed;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+header b{font-size:16px} header span{font-size:12px;opacity:.7}
+nav{position:fixed;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 12px}
+button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:20px;padding:9px 14px;font:inherit;font-size:14px}
+button.on{background:var(--on);color:#fff;border-color:var(--on)}
+select{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:20px;padding:9px 12px;font:inherit;font-size:14px}
+#tip{position:fixed;left:12px;top:40px;font-size:12px;opacity:.65}
+</style></head><body>
+<canvas id="c"></canvas>
+<header><b id="ttl">C37-38 · studio</b><a href="./" style="pointer-events:auto;font-size:13px;color:#5a3d2b">← all concepts</a></header>
+<div id="tip">Drag to turn · pinch to zoom · two fingers to move</div>
+<nav>
+ <button data-v="all" class="on">Whole house</button>
+ <button data-v="ground">Ground</button>
+ <button data-v="first">Upper</button>
+ <button id="cut">Cut walls</button>
+ <select id="walk"><option value="">Walk into a room…</option></select>
+</nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(async () => {
+const CID = new URLSearchParams(location.search).get('c') || 'T1-R2';
+const H = await (await fetch(CID + '/model.json', {cache: 'no-store'})).json();
+document.getElementById('ttl').textContent = CID + ' · ' + (H.title || '');
+document.title = CID + ' · 3D';
+const canvas = document.getElementById('c');
+const R = new THREE.WebGLRenderer({canvas, antialias: true}); R.outputEncoding = THREE.sRGBEncoding; R.setPixelRatio(Math.min(devicePixelRatio, 2));
+R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf4f1ec);
+const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
+const ctl = new THREE.OrbitControls(cam, canvas); ctl.enableDamping = true; ctl.maxPolarAngle = Math.PI * 0.49;
+const [ex0, ey0, ex1, ey1] = H.envelope, C = H.heights.clear, S = H.heights.slab, ZF = H.heights.level.first;
+const cx = (ex0 + ex1) / 2, cy = (ey0 + ey1) / 2;
+const root = new THREE.Group(); root.position.set(-cx, 0, cy); scene.add(root);
+const COL = {wall: 0xece6db, render: 0xe6dccb, glass: 0x8fb6c9, metal: 0x3b3b3b, black: 0x2a2a2a, bronze: 0x6b5a45, white: 0xf3f1ec, doorDark: 0x4a3a2c,
+  tread: 0xa37c55, fascia: 0xe2dccf, tile: 0xb8603a, tileDark: 0x8e4628, stoneOut: 0xcfc6b5, plinth: 0xcfc6b5,
+  walnut: 0x6b4a33, oak: 0xd2b78e, fabric: 0x9c8b78, olive: 0x737a52, porc: 0xf4f2ee, stone: 0xe2d6c3, rug: 0xc9ad8a,
+  trav: 0xe7dccb, oakfloor: 0xcfb48c, brass: 0xa88a5a};
+const mats = {};
+const EDGE = new THREE.LineBasicMaterial({color: 0x9a8f80, transparent: true, opacity: 0.55});
+const mat = m => mats[m] || (mats[m] = new THREE.MeshStandardMaterial(Object.assign({color: COL[m] ?? 0xcccccc, roughness: .9, side: THREE.DoubleSide},
+  m === 'glass' ? {transparent: true, opacity: .4} : {})));
+const parts = [];          // {mesh, z0, z1, lvl}
+const lvlOf = z0 => z0 >= ZF + C - 0.05 ? 'roof' : z0 >= ZF - 0.05 ? 'f' : 'g';
+function addMesh(geo, m, z0, z1, forceLvl) {
+  const mesh = new THREE.Mesh(geo, mat(m)); mesh.castShadow = mesh.receiveShadow = m !== 'glass';
+  mesh.position.y = z0; root.add(mesh);
+  if (m !== 'glass' && m !== 'tile') { const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 30), EDGE); mesh.add(e); }
+  parts.push({mesh, z0, z1, lvl: forceLvl || lvlOf(z0)}); return mesh;
+}
+for (const it of H.boxes) {
+  const [x0, y0, z0, x1, y1, z1] = it.b, h = Math.max(z1 - z0, 0.005);
+  const g = new THREE.BoxGeometry(Math.max(Math.abs(x1 - x0), .005), h, Math.max(Math.abs(y1 - y0), .005));
+  g.translate((x0 + x1) / 2, h / 2, -(y0 + y1) / 2); addMesh(g, it.m, z0, z1);
+}
+for (const it of H.prisms) {
+  const sh = new THREE.Shape(it.p.map(p => new THREE.Vector2(p[0], p[1])));
+  const h = Math.max(it.z[1] - it.z[0], .005), g = new THREE.ExtrudeGeometry(sh, {depth: h, bevelEnabled: false});
+  g.rotateX(-Math.PI / 2); addMesh(g, it.m, it.z[0], it.z[1]);
+}
+for (const it of H.faces) {
+  const P = it.f3, pos = [];
+  for (let k = 1; k < P.length - 1; k++) for (const q of [P[0], P[k], P[k + 1]]) pos.push(q[0], q[2], -q[1]);
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
+  const mesh = new THREE.Mesh(g, mat(it.m)); mesh.castShadow = true; root.add(mesh); parts.push({mesh, z0: 99, z1: 99, lvl: 'roof', face: true});
+}
+function slab(z0, z1, holes, lvl) {
+  const s = new THREE.Shape([[ex0, ey0], [ex1, ey0], [ex1, ey1], [ex0, ey1]].map(p => new THREE.Vector2(p[0], p[1])));
+  for (const h of holes || []) s.holes.push(new THREE.Path(h.map(p => new THREE.Vector2(p[0], p[1]))));
+  const g = new THREE.ExtrudeGeometry(s, {depth: z1 - z0, bevelEnabled: false}); g.rotateX(-Math.PI / 2);
+  const m = addMesh(g, 'plinth', z0, z1, lvl); m.material = new THREE.MeshStandardMaterial({color: 0xbfa98a, roughness: .95});
+}
+slab(-0.3, 0, null, 'g'); slab(ZF - S, ZF, H.levels[1].holes, 'f'); slab(ZF + C, ZF + C + S, null, 'roof');
+{ const g = new THREE.BoxGeometry(40, .02, 44); g.translate(0, -.32, 0);
+  const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({color: 0xb9c79a, roughness: 1})); m.receiveShadow = true; scene.add(m); }
+const hemi = new THREE.HemisphereLight(0xffffff, 0x9c8f7a, 0.55); scene.add(hemi);
+const inner = new THREE.AmbientLight(0xffffff, 0); scene.add(inner);
+const sun = new THREE.DirectionalLight(0xfff1dd, 0.75); sun.position.set(-18, 30, 14); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left: -22, right: 22, top: 22, bottom: -22, far: 90}); scene.add(sun);
+let view = 'all', cut = false;
+function apply() {
+  for (const p of parts) {
+    const {mesh, z0, z1, lvl} = p;
+    let vis = walking ? true : view === 'all' ? !(cut && lvl === 'roof') : view === 'ground' ? lvl === 'g' : lvl !== 'roof';
+    if (!vis) { mesh.visible = false; continue; }
+    if (p.face) { mesh.visible = true; continue; }
+    const base = lvl === 'f' ? ZF : 0, limit = cut && lvl !== 'roof' ? base + 1.2 : Infinity;
+    if (z0 >= limit) { mesh.visible = false; continue; }
+    mesh.visible = true; const zt = Math.min(z1, limit); mesh.scale.y = Math.max((zt - z0) / Math.max(z1 - z0, 1e-3), 1e-3);
+  }
+  document.querySelectorAll('nav button[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === view));
+  document.getElementById('cut').classList.toggle('on', cut);
+  inner.intensity = walking ? 0.18 : 0; hemi.intensity = walking ? 0.45 : 0.55;
+  home();
+}
+function home() {
+  if (walking) { placeWalker(); return; }
+  ctl.minDistance = 0; ctl.maxDistance = Infinity; ctl.enablePan = true; ctl.maxPolarAngle = Math.PI * 0.49;
+  const portrait = innerWidth < innerHeight, k = portrait ? 1.6 : 1.0;
+  const ty = view === 'first' ? ZF : view === 'ground' ? 0 : 3;
+  ctl.target.set(0, ty, 0);
+  if (view === 'all') cam.position.set(-20 * k, 15 * k + ty, 22 * k); else cam.position.set(-9 * k, 22 * k + ty, 11 * k);
+}
+document.querySelectorAll('nav button[data-v]').forEach(b => b.onclick = () => { view = b.dataset.v; cut = view !== 'all'; walking = null; sel.value = ''; apply(); });
+document.getElementById('cut').onclick = () => { cut = !cut; walking = null; apply(); };
+const ROOMS = (H.cams || []).map(c => [c.name, c.lv === 'ground' ? 'g' : 'f', c.at[0], c.at[1], c.look[0], c.look[1]]);
+const sel = document.getElementById('walk');
+ROOMS.forEach((r, i) => { const o = document.createElement('option'); o.value = i; o.textContent = (r[1] === 'g' ? 'Ground · ' : 'Upper · ') + r[0]; sel.appendChild(o); });
+let walking = null;
+sel.onchange = () => { walking = sel.value === '' ? null : ROOMS[+sel.value]; if (walking) { view = walking[1] === 'g' ? 'ground' : 'first'; cut = false; } apply(); };
+function placeWalker() {
+  const [, lv, x, y, lx, ly] = walking, z = (lv === 'f' ? ZF : 0) + 1.6;
+  const p = new THREE.Vector3(x - cx, z, -(y - cy)), t = new THREE.Vector3(lx - cx, z - 0.15, -(ly - cy));
+  const dir = t.clone().sub(p).normalize();
+  cam.position.copy(p); ctl.target.copy(p.clone().add(dir.multiplyScalar(0.25)));
+  cam.fov = 75; cam.updateProjectionMatrix(); ctl.minDistance = 0.05; ctl.maxDistance = 0.3; ctl.enablePan = false; ctl.maxPolarAngle = Math.PI * 0.85;
+}
+function size() { const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.fov = walking ? 75 : (w < h ? 55 : 40); cam.updateProjectionMatrix(); }
+addEventListener('resize', () => { size(); home(); }); size(); apply();
+window.WALK = i => { sel.value = i; sel.onchange(); };
+(function loop() { ctl.update(); R.render(scene, cam); requestAnimationFrame(loop); })();
+setTimeout(() => document.getElementById('tip').style.display = 'none', 6000);
+})();
+</script>
+</body></html>

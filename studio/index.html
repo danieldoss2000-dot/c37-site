@@ -1,0 +1,357 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>C37-38 Design Studio</title>
+<link rel=preconnect href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600&display=swap" rel=stylesheet>
+<style>
+:root{--bg:#f4f0e9;--card:#fffdf9;--ink:#2f2925;--soft:#6c5f53;--line:#e2d8c8;--wal:#6b4a33;--trav:#e2d6c3;--olive:#6f7454;--terra:#b8674a}
+*{box-sizing:border-box} img{max-width:100%} section{overflow-wrap:break-word} .scroll table{min-width:640px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:0 16px 80px}
+header.hero{padding:46px 0 24px} .kick{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--terra);font-weight:600}
+h1{font:650 clamp(34px,6vw,58px)/1.03 Fraunces,serif;margin:8px 0 14px} h2{font:650 clamp(24px,4vw,34px)/1.15 Fraunces,serif;margin:6px 0 6px}
+h2 span{color:var(--terra);font-size:.7em;margin-right:6px} h3{font:600 15px Inter;margin:18px 0 6px;color:var(--wal)}
+.lede{font-size:18px;color:var(--soft);max-width:760px}
+nav.jump{position:sticky;top:0;z-index:5;background:rgba(244,240,233,.94);backdrop-filter:blur(6px);display:flex;gap:6px;overflow-x:auto;padding:10px 0;border-bottom:1px solid var(--line)}
+nav.jump a{flex:none;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;background:var(--card)}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:22px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.tag{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--olive);font-weight:600}
+.tagline{font-family:Fraunces,serif;font-size:19px;color:var(--soft);margin:2px 0 14px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px} figure{margin:0} figure img{width:100%;border-radius:12px;border:1px solid var(--line);background:#f3f0ea;cursor:zoom-in}
+figcaption{font-size:12px;color:var(--soft);margin-top:4px;text-align:center}
+ul{padding-left:20px} .pitch li{margin:6px 0} .chg li{font-size:14px;color:var(--soft);margin:3px 0}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0} .nums div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.nums b{display:block;font:650 22px Fraunces,serif} .nums span{font-size:11px;color:var(--soft)}
+.eq{font-size:14px;background:#f1f4ea;border-radius:10px;padding:10px 12px}
+.score{display:grid;grid-template-columns:120px 1fr;gap:6px 16px;align-items:center;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+.score .big{grid-row:span 7;font:650 46px Fraunces,serif;color:var(--wal)} .score small{font-size:14px;color:var(--soft)}
+.bar{display:grid;grid-template-columns:150px 1fr 26px;gap:8px;align-items:center;font-size:13px} .bar i{display:block;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--olive),var(--wal))}
+.why{grid-column:1/-1;font-size:14px;color:var(--soft);margin:6px 0 0}
+.links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap} .btn,.btn2{text-decoration:none;border-radius:999px;padding:10px 16px;font-weight:600;font-size:14px}
+.btn{background:var(--wal);color:#fff} .btn2{border:1px solid var(--line);color:var(--ink)}
+table{border-collapse:collapse;width:100%;font-size:13.5px} th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--wal);font-size:12px;text-transform:uppercase;letter-spacing:.05em} td.sc{font:650 18px Fraunces,serif;color:var(--wal)} .m{font-size:12px;color:var(--soft)}
+.scroll{overflow-x:auto} .site{display:grid;grid-template-columns:minmax(0,340px) 1fr;gap:20px;align-items:start} .site img{width:100%;border-radius:12px}
+#zoom{position:fixed;inset:0;background:rgba(30,24,20,.92);display:none;z-index:9;overflow:auto} #zoom img{width:200%;max-width:none;display:block}
+@media (max-width:720px){.duo,.site{grid-template-columns:1fr} .nums{grid-template-columns:1fr 1fr} .score{grid-template-columns:1fr} .score .big{grid-row:auto} .bar{grid-template-columns:120px 1fr 22px}}
+</style></head><body><main>
+<header class=hero><div class=kick>C37-38 · Stone Park · Daniel & Karen</div><h1>Design Studio</h1>
+<p class=lede>Every drawing you have, reviewed by a council of five. Then two tracks: <b>develop your master plan</b> round by round,
+and <b>start from a clean sheet</b> keeping only the concrete, the stair and the garden and street facades. Each concept is drawn
+with real furniture, measured the same way, and walked through three life stages: the two of you, young children, older children.</p></header>
+<nav class=jump><a href='#site'>Site</a><a href='#council'>Council</a><a href='#compare'>Compare</a><a href='#T0'>T0</a><a href='#T1-R1'>T1-R1</a><a href='#T1-R2'>T1-R2</a><a href='#T1-R2W'>T1-R2W</a><a href='#T1-R3'>T1-R3</a><a href='#T1-X'>T1-X</a></nav>
+
+<section id=site><div class=tag>Site and climate</div><h2>Where the house sits</h2><div class=site><img src=site.png alt="site diagram">
+<div><p>The garden faces roughly north: soft light all day and the cool north-west breeze. The street side faces south and takes the sun.
+Neighbours stand about 6 m away on both sides, so the side windows are for light and air, and that is where the AC units and kitchen exhaust go.</p>
+<p><b>So:</b> living, master bedroom and the suite lounge belong on the garden side; kitchen, kids rooms and entrance on the bright street side;
+baths, dressings, laundry and the stair in the middle, where they also keep the parents' and children's wings apart.</p></div></div></section>
+<section id=council><div class=tag>The council</div><h2>Five reviewers, every drawing</h2><p>Five independent reviewers read the brief (docs/studio/BRIEF.md) and every drawing Daniel has: the master ground floor
+(C37-38 FINAL), the master first floor (proposal), KKK, Villa design 1, Daniel's own draft (v1 + v2), the architect's
+options 1, 2, 2.1, 2.2, 3, 4, 5, f and j, and the previous working plan. Full reports: scratch copies in the session,
+summarised here. Weights: use of space 25, modularity / life stages 25, flow and privacy 15, storage 10, light and air 10,
+buildability 10, sense of space 5.</p>
+<div class=scroll><table>
+<thead>
+<tr>
+<th>Reviewer</th>
+<th>Lens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lead architect</td>
+<td>plan organisation, structure grid, circulation, facades</td>
+</tr>
+<tr>
+<td>Interior designer / space planner</td>
+<td>furniture fit, proportions, sightlines, Walnut &amp; Travertine</td>
+</tr>
+<tr>
+<td>Family-life &amp; storage</td>
+<td>three life stages, night routes, child equity, storage volume</td>
+</tr>
+<tr>
+<td>MEP &amp; climate engineer</td>
+<td>stacks and drains, hidden split AC, hood, noise, daylight, breeze</td>
+</tr>
+<tr>
+<td>Egyptian market &amp; lifestyle</td>
+<td>guests, privacy, resale, local habits</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Scoreboard (weighted /100)</h2>
+<div class=scroll><table>
+<thead>
+<tr>
+<th>Drawing</th>
+<th>Architect</th>
+<th>Interior</th>
+<th>Family</th>
+<th>MEP</th>
+<th>Market</th>
+<th><strong>Average</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Master first floor (proposal)</td>
+<td>65</td>
+<td>68</td>
+<td>67</td>
+<td>74</td>
+<td>74</td>
+<td><strong>69.6</strong></td>
+</tr>
+<tr>
+<td>Option f</td>
+<td>70</td>
+<td>68.5</td>
+<td>66</td>
+<td>62</td>
+<td>72</td>
+<td><strong>67.7</strong></td>
+</tr>
+<tr>
+<td>Master ground floor (FINAL)</td>
+<td>63</td>
+<td>69.5</td>
+<td>63</td>
+<td>70</td>
+<td>70</td>
+<td><strong>67.1</strong></td>
+</tr>
+<tr>
+<td>Daniel's draft</td>
+<td>64</td>
+<td>65.5</td>
+<td>64</td>
+<td>72</td>
+<td>68</td>
+<td><strong>66.7</strong></td>
+</tr>
+<tr>
+<td>Option 2.2</td>
+<td>69</td>
+<td>65</td>
+<td>62</td>
+<td>60</td>
+<td>69</td>
+<td><strong>65.0</strong></td>
+</tr>
+<tr>
+<td>Option 2</td>
+<td>68</td>
+<td>62.5</td>
+<td>61</td>
+<td>58</td>
+<td>67</td>
+<td><strong>63.3</strong></td>
+</tr>
+<tr>
+<td>Option 3</td>
+<td>59</td>
+<td>59</td>
+<td>63</td>
+<td>62</td>
+<td>65</td>
+<td><strong>61.6</strong></td>
+</tr>
+<tr>
+<td>KKK</td>
+<td>60</td>
+<td>57.5</td>
+<td>63</td>
+<td>60</td>
+<td>67</td>
+<td><strong>61.5</strong></td>
+</tr>
+<tr>
+<td>Option 1</td>
+<td>59</td>
+<td>56.5</td>
+<td>60</td>
+<td>56</td>
+<td>65</td>
+<td><strong>59.3</strong></td>
+</tr>
+<tr>
+<td>Option 5</td>
+<td>60</td>
+<td>55</td>
+<td>60</td>
+<td>54</td>
+<td>58</td>
+<td><strong>57.4</strong></td>
+</tr>
+<tr>
+<td>Option j</td>
+<td>58</td>
+<td>52</td>
+<td>57</td>
+<td>58</td>
+<td>61</td>
+<td><strong>57.2</strong></td>
+</tr>
+<tr>
+<td>Option 4</td>
+<td>55</td>
+<td>54</td>
+<td>58</td>
+<td>55</td>
+<td>59</td>
+<td><strong>56.2</strong></td>
+</tr>
+<tr>
+<td>Villa design 1</td>
+<td>54</td>
+<td>51.5</td>
+<td>52</td>
+<td>56</td>
+<td>55</td>
+<td><strong>53.7</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Your master first floor tops the board: it is the only drawing with the whole couple → young family → older children path
+and no building work between stages. Villa design 1 has the best sense of space of all (9/10 from the interior designer)
+and the lowest modularity (3/10): keep its curves, not its plan. Options 4 and 5 lose because the master bedroom has no
+bathroom of its own.</p>
+<h2>Where all five agree (fixed in Track 1, round 1)</h2>
+<ol>
+<li><strong>Kitchen</strong>: drawn closed (reached only through the dining room), no movable partition to the hall, no breakfast seat,
+   and the pantry has the only street window. → island with stools, hall access, kitchen takes the window.</li>
+<li><strong>Entry</strong>: no vestibule, no 1.8 m coats-and-shoes cupboard, stair in full view of the salon. → vestibule + glazed door.</li>
+<li><strong>Salon</strong>: ≈ 50 m² in one undivided room (target 24–32) with no TV wall. → TV living + garden lounge.</li>
+<li><strong>Master bath</strong> reads as a tub in the drawings; the brief says shower. → walk-in shower + double basin.</li>
+<li><strong>Laundry</strong> 1.9 m², no counter, no linen, no drying. → bigger, machines side by side, linen.</li>
+<li><strong>Kids bath</strong> door from a lobby, not from inside a kids room. → kids wing door + inside doors.</li>
+<li><strong>Storage</strong> short on linen, coats, broom cupboards; pantry over-sized.</li>
+</ol>
+<h2>Where they split</h2>
+<ul>
+<li>Prayer room: keep it closed (brief) vs an icon alcove that frees space for a laundry with a window (family, interior).</li>
+<li>Ground-floor flexible room for parents / after a birth / old age: three of five want it; the brief says no guest bedroom.</li>
+<li>Separate his + hers dressing (brief) vs one walk-through dressing with more hanging metres (interior, architect).</li>
+<li>Kids bath tub (Daniel kept it) vs shower + twin basin (architect, family for teenagers).
+→ All of these are in <strong>T1-X "Challenge the brief"</strong>, kept apart from the main concepts as Daniel asked.</li>
+</ul>
+<h2>Blind spots the engineer added</h2>
+<ul>
+<li>The kitchenette sink in the corridor has no stack nearby: move it onto a wet wall (done in Track 1: back-to-back with
+  the laundry on the old ensuite stack E1).</li>
+<li>Survey the three first-floor stacks W1, W2, E1 and where E1 lands downstairs before anything is built.</li>
+<li>Hood: vent to the west side facade away from the first-floor windows, with make-up air when the kitchen is closed.</li>
+<li>AC: slim ducted units in the service ceilings (dressings, baths, corridor, pantry); outdoor units on pads in the side
+  setbacks, one group per side.</li>
+</ul>
+<h2>Ideas worth stealing (and where they went)</h2>
+<ul>
+<li>Option f: washer + dryer side by side next to a shower room on one wet wall → Track 1 utility lobby.</li>
+<li>Option 2.2: a linen room / cupboard off the corridor → corridor linen in Track 1.</li>
+<li>Daniel's draft v2: a passage with his dressing along it → round 2 "suite gallery".</li>
+<li>Iteration 7: hidden coat cupboard, store with an outside door → kept.</li>
+<li>Villa design 1: curves where people walk → T2-C "Soft courtyard".</li>
+<li>KKK: kitchenette behind walnut doors → utility lobby kitchenette.</li>
+</ul></section>
+<section id=compare><div class=tag>Side by side</div><h2>The concepts in numbers</h2><div class=scroll><table>
+<tr><th>Concept</th><th>Ground circ.</th><th>First circ.</th><th>Wardrobe</th><th>Shelves, linen, pantry</th><th>Stage 3 per child</th><th>Score</th></tr>
+<tr><td><a href='#T0'><b>T0</b></a><br><span class=m>Master plan as drawn (baseline)</span></td><td>9.8 %</td><td>14.0 %</td><td>10.0 m</td><td>3.9 m</td><td>17.1 m² · via 2 room(s)<br>14.3 m² · via 1 room(s)<br>16.2 m² · own door</td><td class=sc>64.0</td></tr><tr><td><a href='#T1-R1'><b>T1-R1</b></a><br><span class=m>Master plan, round 1 — the council&#x27;s fixes</span></td><td>16.6 %</td><td>15.3 %</td><td>11.9 m</td><td>15.4 m</td><td>17.8 m² · via 1 room(s)<br>14.2 m² · own door<br>13.8 m² · own door</td><td class=sc>72.0</td></tr><tr><td><a href='#T1-R2'><b>T1-R2</b></a><br><span class=m>Master plan, round 2 — the suite and the stair top</span></td><td>16.6 %</td><td>11.7 %</td><td>13.6 m</td><td>15.0 m</td><td>17.8 m² · via 1 room(s)<br>14.2 m² · own door<br>12.4 m² · own door</td><td class=sc>76.5</td></tr><tr><td><a href='#T1-R2W'><b>T1-R2W</b></a><br><span class=m>Round 2 + guest WC with an outside door</span></td><td>16.6 %</td><td>11.7 %</td><td>13.6 m</td><td>15.0 m</td><td>17.8 m² · via 1 room(s)<br>14.2 m² · own door<br>12.4 m² · own door</td><td class=sc>75.5</td></tr><tr><td><a href='#T1-R3'><b>T1-R3</b></a><br><span class=m>Master plan, round 3 — off the grid where it pays</span></td><td>16.6 %</td><td>11.8 %</td><td>13.6 m</td><td>15.3 m</td><td>17.8 m² · via 1 room(s)<br>14.2 m² · own door<br>12.4 m² · own door</td><td class=sc>78.5</td></tr><tr><td><a href='#T1-X'><b>T1-X</b></a><br><span class=m>Challenge the brief</span></td><td>16.5 %</td><td>14.6 %</td><td>14.3 m</td><td>13.8 m</td><td>17.8 m² · via 1 room(s)<br>14.2 m² · own door<br>13.9 m² · own door<br>11.2 m² · via 3 room(s)</td><td class=sc>76.0</td></tr></table></div><p class=m>Scores: the studio's weighted scorecard (BRIEF section 6). Circulation target ≤ 15 %.</p></section>
+
+<section class=concept id='T0'>
+ <div class=tag>Baseline</div>
+ <h2><span>T0</span> Master plan as drawn (baseline)</h2>
+ <p class=tagline>Your current master drawing (C37-38 FINAL + proposal, 2026-10-18), redrawn in the studio format so every concept is measured the same way.</p>
+ <div class=duo><figure><img loading=lazy src='T0/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T0/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>Ground: kitchen + pantry on the street side of the west bay, dining between two movable glass walls, one 50 m² great room, entrance hall with guest WC and an outside-access store.</li><li>First: master suite in the garden half (bedroom, his + hers dressing, shower room, suite lounge with its own bath), kids wing in the street half (double room, playroom, kids bath off a lobby), prayer room and kitchenette mid-house.</li></ul>
+ 
+ 
+ 
+ <div class=nums><div><b>112.7</b><span>m² ground rooms</span></div><div><b>113.3</b><span>m² first rooms</span></div>
+ <div><b>10.0</b><span>m of wardrobe</span></div><div><b>14.0%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double bedroom 17.1 m²/child (via 2 room(s)) · Playroom / modular room 14.3 m²/child (via 1 room(s)) · Suite lounge / future bedroom 16.2 m²/child (own door)</p>
+ <div class=score><div class=big>64.0<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:60%'></i><b>6</b></div><div class=bar><span>Modularity / life stages</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Flow & privacy</span><i style='width:50%'></i><b>5</b></div><div class=bar><span>Storage</span><i style='width:50%'></i><b>5</b></div><div class=bar><span>Light & air</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Buildability</span><i style='width:90%'></i><b>9</b></div><div class=bar><span>Sense of space</span><i style='width:60%'></i><b>6</b></div><p class=why>Your master as drawn: the only plan with the whole 15-year path, but a closed kitchen, no entry sequence, a 50 m² salon and thin storage.</p></div>
+ <div class=links><a class=btn href='view.html?c=T0'>Walk it in 3D</a><a class=btn2 href='T0/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+<section class=concept id='T1-R1'>
+ <div class=tag>Track 1 · develop the master</div>
+ <h2><span>T1-R1</span> Master plan, round 1 — the council&#x27;s fixes</h2>
+ <p class=tagline>Same bones as your master drawing. Every fix the five reviewers agreed on, and nothing else.</p>
+ <div class=duo><figure><img loading=lazy src='T1-R1/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T1-R1/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>Kitchen gets the street window and a 3-stool island; pantry becomes a 3.4 m² walk-in; a pocket door from the hall makes the shopping route 6 steps.</li><li>A real entry sequence: vestibule with a glazed door, guest WC off the vestibule, 2.2 m coats-and-shoes wall in the hall.</li><li>The 50 m² salon becomes two rooms in one: TV living for 7 in the east bay, a garden lounge by the terrace in the west bay.</li><li>Upstairs: hotel suite door facing the top of the stair; walk-in shower with double basin (no tub); kids wing behind one door with the bath opening from inside the playroom.</li><li>Utility lobby at the stair top: kitchenette back-to-back with a side-by-side laundry on the old ensuite stack; suite lounge keeps its own lockable door and a shower room for stage 3.</li></ul>
+ <h3>What changed</h3><ul class=chg><li>Pantry 7.1 → 3.4 m²; kitchen window regained.</li><li>Kitchen ↔ hall: new 0.9 m pocket door. Hall ↔ dining: new 1.0 m opening.</li><li>Vestibule + glazed double door; guest WC door moved into the vestibule.</li><li>Master shower room: tub out, 1.6 m walk-in + double basin.</li><li>Laundry 1.9 → 2.7 m², machines side by side; kitchenette moved off the corridor onto the laundry&#x27;s wet wall.</li><li>Kids wing door; double room enters from the kids lobby; kids bath pocket door from the playroom; corridor linen cupboard 1.6 m.</li></ul>
+ 
+ <figure><img loading=lazy src='T1-R1/stages.jpg' alt='life stages'><figcaption>First floor at the three life stages — tap to zoom</figcaption></figure>
+ <div class=nums><div><b>113.1</b><span>m² ground rooms</span></div><div><b>113.5</b><span>m² first rooms</span></div>
+ <div><b>11.9</b><span>m of wardrobe</span></div><div><b>15.3%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double kids room 17.8 m²/child (via 1 room(s)) · Playroom 14.2 m²/child (own door) · Suite lounge 13.8 m²/child (own door)</p>
+ <div class=score><div class=big>72.0<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Modularity / life stages</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Flow & privacy</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Storage</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Light & air</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Buildability</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Sense of space</span><i style='width:60%'></i><b>6</b></div><p class=why>Fixes every point the council agreed on without touching the bones: kitchen, entry, salon zones, shower, laundry, kids wing door.</p></div>
+ <div class=links><a class=btn href='view.html?c=T1-R1'>Walk it in 3D</a><a class=btn2 href='T1-R1/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+<section class=concept id='T1-R2'>
+ <div class=tag>Track 1 · develop the master</div>
+ <h2><span>T1-R2</span> Master plan, round 2 — the suite and the stair top</h2>
+ <p class=tagline>Round 1 plus a real hotel suite: one door, a dressing gallery, a windowed shower room, and twice the hanging space.</p>
+ <div class=duo><figure><img loading=lazy src='T1-R2/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T1-R2/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>Suite door straight ahead as you reach the top of the stair. Inside: his dressing gallery (3.4 m) leading to the bedroom, hers walk-in (4.7 m) behind a sliding door, shower room with its own window.</li><li>Kitchen opens to the hall through a 1.6 m sliding glass wall (closed for guests and frying, open for family life), plus the glass walls to the dining that you already have.</li><li>Stair top becomes the family utility heart: kitchenette, a 3.1 m² laundry with machines side by side, and the lounge&#x27;s own door — all outside the suite.</li><li>Suite lounge 13 m² with its own shower room: a private sitting room now, a bedroom with an ensuite at stage 3.</li><li>Kids wing unchanged from round 1: one wing door, hidden playroom door, bath reachable from inside the playroom.</li></ul>
+ <h3>What changed</h3><ul class=chg><li>Suite rebuilt: dressing gallery + hers walk-in + shower room in the old his / shower / hers strip; suite hall and passage folded into the gallery (1.2 m² less corridor).</li><li>Hanging space: his 2.75 → 3.4 m, hers 3.35 → 4.7 m. Master shower room 5.4 → 5.3 m² but with a window.</li><li>Kitchen ↔ hall: 0.9 m pocket door → 1.6 m sliding glass wall.</li><li>Laundry 2.7 → 3.1 m², shower 2 grows; suite lounge 13.8 → 13.0 m².</li><li>Under-stair store fitted in the stair well footprint (ground).</li></ul>
+ 
+ <figure><img loading=lazy src='T1-R2/stages.jpg' alt='life stages'><figcaption>First floor at the three life stages — tap to zoom</figcaption></figure>
+ <div class=nums><div><b>113.2</b><span>m² ground rooms</span></div><div><b>113.5</b><span>m² first rooms</span></div>
+ <div><b>13.6</b><span>m of wardrobe</span></div><div><b>11.7%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double kids room 17.8 m²/child (via 1 room(s)) · Playroom 14.2 m²/child (own door) · Suite lounge 12.4 m²/child (own door)</p>
+ <div class=score><div class=big>76.5<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Modularity / life stages</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Flow & privacy</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Storage</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Light & air</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Buildability</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Sense of space</span><i style='width:60%'></i><b>6</b></div><p class=why>The suite becomes a real hotel sequence with almost twice the hanging space and a windowed shower; utility heart at the stair top.</p></div>
+ <div class=links><a class=btn href='view.html?c=T1-R2'>Walk it in 3D</a><a class=btn2 href='T1-R2/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+<section class=concept id='T1-R2W'>
+ <div class=tag>Track 1 · develop the master</div>
+ <h2><span>T1-R2W</span> Round 2 + guest WC with an outside door</h2>
+ <p class=tagline>Daniel&#x27;s variant: the guest WC opens both to the vestibule and straight to the side yard, for garden and pool days.</p>
+ <div class=duo><figure><img loading=lazy src='T1-R2W/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T1-R2W/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>The east side window of the guest WC becomes a 0.8 m outside door onto the side yard, the path between the street and the garden.</li><li>Garden guests, children playing outside and the gardener use the WC without walking through the house or the travertine floors.</li><li>Inside door from the vestibule stays, so guests at a dinner still use it without going outside.</li><li>Both doors lock from inside; the room is re-planned so neither door swings into the WC or the basin.</li><li>Everything else is round 2.</li></ul>
+ <h3>Changes vs round 2</h3><ul class=chg><li>Guest WC: east window replaced by an outside door (SIDE facade: needs the compound&#x27;s approval, like the store door).</li><li>WC moved to the street-side wall, basin to the hall-side wall; room stays 2.7 m².</li></ul>
+ <h3>Notes</h3><ul class=chg><li>Compound request: guest WC east window (Y -7.20…-6.60) becomes a door Y -7.25…-6.45.</li></ul>
+ <figure><img loading=lazy src='T1-R2W/stages.jpg' alt='life stages'><figcaption>First floor at the three life stages — tap to zoom</figcaption></figure>
+ <div class=nums><div><b>113.2</b><span>m² ground rooms</span></div><div><b>113.5</b><span>m² first rooms</span></div>
+ <div><b>13.6</b><span>m of wardrobe</span></div><div><b>11.7%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double kids room 17.8 m²/child (via 1 room(s)) · Playroom 14.2 m²/child (own door) · Suite lounge 12.4 m²/child (own door)</p>
+ <div class=score><div class=big>75.5<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Modularity / life stages</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Flow & privacy</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Storage</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Light & air</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Buildability</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Sense of space</span><i style='width:60%'></i><b>6</b></div><p class=why>Round 2 with the garden-access guest WC: great for garden days, costs one side-facade request.</p></div>
+ <div class=links><a class=btn href='view.html?c=T1-R2W'>Walk it in 3D</a><a class=btn2 href='T1-R2W/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+<section class=concept id='T1-R3'>
+ <div class=tag>Track 1 · develop the master</div>
+ <h2><span>T1-R3</span> Master plan, round 3 — off the grid where it pays</h2>
+ <p class=tagline>Round 2, with the grid broken in the three places where a 45° line creates space out of nothing.</p>
+ <div class=duo><figure><img loading=lazy src='T1-R3/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T1-R3/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>Entrance: the vestibule&#x27;s glass wall turns 45°, so the front door opens onto a diagonal view of the hall, the stair and the garden beyond; guests are steered to the living and the WC, and the coat wall gains a full 2 m run.</li><li>Upstairs junction: the prayer room&#x27;s corner is cut at 45°. Its door now faces you as you turn from the stair, the corridor corner widens into a small landing, and the icon wall keeps a clean east wall.</li><li>Secret den: the kids bath ceiling drops to 2.3 m (it needs a service void anyway) and the 0.85 m above becomes a hidden loft den reached by a ladder in the playroom — a room that costs no floor area.</li><li>The E1 drain stack is wrapped into a walnut AV column in the living room instead of a boxed-out corner.</li><li>Everything that worked in round 2 stays: one suite door, dressing gallery, hers walk-in, windowed shower room, utility lobby, lockable lounge.</li></ul>
+ <h3>Changes vs round 2</h3><ul class=chg><li>Vestibule: straight glass screen → 45° glazed wall with a 1.2 m double door; guest WC door slid to the street end of the vestibule.</li><li>Kitchen ↔ hall glass slider re-centred (1.2 m) clear of the new vestibule.</li><li>Prayer room: north-east corner cut at 45° with the door on the diagonal (4.2 → 4.0 m²); corridor junction +0.2 m².</li><li>Loft den over the kids bath (≈ 2.9 × 1.5 m, 0.85 m high) + ladder; walnut column around the E1 stack downstairs.</li></ul>
+ 
+ <figure><img loading=lazy src='T1-R3/stages.jpg' alt='life stages'><figcaption>First floor at the three life stages — tap to zoom</figcaption></figure>
+ <div class=nums><div><b>113.1</b><span>m² ground rooms</span></div><div><b>113.5</b><span>m² first rooms</span></div>
+ <div><b>13.6</b><span>m of wardrobe</span></div><div><b>11.8%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double kids room 17.8 m²/child (via 1 room(s)) · Playroom 14.2 m²/child (own door) · Suite lounge 12.4 m²/child (own door)</p>
+ <div class=score><div class=big>78.5<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Modularity / life stages</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Flow & privacy</span><i style='width:90%'></i><b>9</b></div><div class=bar><span>Storage</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Light & air</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Buildability</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Sense of space</span><i style='width:70%'></i><b>7</b></div><p class=why>Round 2 plus three 45° moves that make the entrance and the upstairs junction generous, and a secret loft den that costs no floor.</p></div>
+ <div class=links><a class=btn href='view.html?c=T1-R3'>Walk it in 3D</a><a class=btn2 href='T1-R3/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+<section class=concept id='T1-X'>
+ <div class=tag>Challenge the brief</div>
+ <h2><span>T1-X</span> Challenge the brief</h2>
+ <p class=tagline>T1-R1 plus the points most of the council pushed back on. Judge each alone; any can go back to the brief.</p>
+ <div class=duo><figure><img loading=lazy src='T1-X/ground.jpg' alt='ground floor'><figcaption>Ground floor</figcaption></figure>
+ <figure><img loading=lazy src='T1-X/first.jpg' alt='first floor'><figcaption>First floor</figcaption></figure></div>
+ <ul class=pitch><li>Ground flex room 11.2 m² (door, queen bed, wardrobe): a parent after a birth or surgery, a grandparent, you two in old age; a quiet room otherwise. Costs most of the garden lounge (21.8 → 9.8 m²).</li><li>Guest WC gets a 0.9 × 0.9 shower (2.7 → 3.0 m²) for long stays. It is 3 rooms from the flex room: fine for a guest, not a wheelchair.</li><li>Dining: table for 6 daily, extends to 2.4 m for 10 at Christmas and Easter (dashed). No extra floor; tight to the wall on feast days.</li><li>One walk-through dressing (bed → dressing → shower): 6.75 m of wardrobe vs 6.1 m (hers 4.1, his 2.65), one wall and two doors fewer. You lose two closable rooms.</li><li>Kids bath: 0.9 × 1.4 shower with hand spray + 1.2 m twin basin, no tub. Faster mornings; babies need a baby tub.</li><li>Laundry takes the prayer slot on the kids-bath stack: window, drying rack, 2.8 → 4.2 m². Prayer becomes an icon alcove at the landing; kitchenette loses its sink.</li></ul>
+ <h3>Challenges vs the brief</h3><ul class=chg><li>1 · Flex room +11.2 m² from the garden lounge (−12.0 m²); new west window.</li><li>1 · Guest WC +0.3 m² with shower (vestibule wall moves 0.2 m).</li><li>2 · Dining 11.6 m² unchanged; extending table 1.8 → 2.4 m (6 → 10).</li><li>3 · His 4.75 + hers 6.66 → shared dressing 10.85 m²; wardrobe +0.65 m; new 1.6 m² linen closet.</li><li>4 · Kids bath 4.3 m² unchanged: tub → 0.9 × 1.4 shower, twin basin.</li><li>5 · Laundry +1.4 m² with window + drying rack; kitchenette sink removed.</li><li>6 · Prayer room 4.2 m² → icon alcove 2.9 m² (−1.3 m²); frees the slot for the laundry.</li></ul>
+ <h3>Notes</h3><ul class=chg><li>Compound request 1 (ground, west facade): new window ≈ 0.8 m wide at Y +1.8…+2.6 for the flex room.</li><li>Compound request 2 (first, west facade): new window ≈ 0.6 m wide at Y −3.9…−3.3 for the laundry (beside the existing high kids-bath window).</li><li>Wet points: laundry moves from the landing to the W2 stack beside the kids bath; kitchenette sink deleted; guest WC gains a shower in its existing drain zone; master and lounge showers stay put.</li></ul>
+ <figure><img loading=lazy src='T1-X/stages.jpg' alt='life stages'><figcaption>First floor at the three life stages — tap to zoom</figcaption></figure>
+ <div class=nums><div><b>112.1</b><span>m² ground rooms</span></div><div><b>113.7</b><span>m² first rooms</span></div>
+ <div><b>14.3</b><span>m of wardrobe</span></div><div><b>14.6%</b><span>first-floor circulation</span></div></div>
+ <p class=eq><b>Stage 3, per child:</b> Double kids room 17.8 m²/child (via 1 room(s)) · Playroom 14.2 m²/child (own door) · Suite lounge 13.9 m²/child (own door) · Flex room 11.2 m²/child (via 3 room(s))</p>
+ <div class=score><div class=big>76.0<small>/100</small></div><div class=bar><span>Use of space</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Modularity / life stages</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Flow & privacy</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Storage</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Light & air</span><i style='width:80%'></i><b>8</b></div><div class=bar><span>Buildability</span><i style='width:70%'></i><b>7</b></div><div class=bar><span>Sense of space</span><i style='width:50%'></i><b>5</b></div><p class=why>Wins a ground-floor flex room, a laundry with a window and more wardrobe, but shrinks the garden lounge and needs two new side windows.</p></div>
+ <div class=links><a class=btn href='view.html?c=T1-X'>Walk it in 3D</a><a class=btn2 href='T1-X/sheet.pdf'>Sheet (PDF)</a></div>
+</section>
+</main><div id=zoom onclick="this.style.display='none'"><img alt=""></div>
+<script>document.querySelectorAll('figure img').forEach(i=>i.onclick=()=>{const z=document.getElementById('zoom');z.querySelector('img').src=i.src;z.style.display='block';z.scrollTo(0,0)})</script>
+</body></html>
