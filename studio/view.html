@@ -41,7 +41,7 @@ const ctl = new THREE.OrbitControls(cam, canvas); ctl.enableDamping = true; ctl.
 const [ex0, ey0, ex1, ey1] = H.envelope, C = H.heights.clear, S = H.heights.slab, ZF = H.heights.level.first;
 const cx = (ex0 + ex1) / 2, cy = (ey0 + ey1) / 2;
 const root = new THREE.Group(); root.position.set(-cx, 0, cy); scene.add(root);
-const COL = {wall: 0xece6db, render: 0xe6dccb, glass: 0x8fb6c9, metal: 0x3b3b3b, black: 0x2a2a2a, bronze: 0x6b5a45, white: 0xf3f1ec, doorDark: 0x4a3a2c,
+const COL = {wall: 0xf3ede3, render: 0xe6dccb, glass: 0x8fb6c9, metal: 0x3b3b3b, black: 0x2a2a2a, bronze: 0x6b5a45, white: 0xf3f1ec, doorDark: 0x4a3a2c,
   tread: 0xa37c55, fascia: 0xe2dccf, tile: 0xb8603a, tileDark: 0x8e4628, stoneOut: 0xcfc6b5, plinth: 0xcfc6b5,
   walnut: 0x6b4a33, oak: 0xd2b78e, fabric: 0x9c8b78, olive: 0x737a52, porc: 0xf4f2ee, stone: 0xe2d6c3, rug: 0xc9ad8a,
   trav: 0xe7dccb, oakfloor: 0xcfb48c, brass: 0xa88a5a};
@@ -83,7 +83,8 @@ slab(-0.3, 0, null, 'g'); slab(ZF - S, ZF, H.levels[1].holes, 'f'); slab(ZF + C,
 { const g = new THREE.BoxGeometry(40, .02, 44); g.translate(0, -.32, 0);
   const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({color: 0xb9c79a, roughness: 1})); m.receiveShadow = true; scene.add(m); }
 const hemi = new THREE.HemisphereLight(0xffffff, 0x9c8f7a, 0.55); scene.add(hemi);
-const inner = new THREE.AmbientLight(0xffffff, 0); scene.add(inner);
+const inner = new THREE.AmbientLight(0xfff3e2, 0); scene.add(inner);
+const lamp = new THREE.PointLight(0xffe2bf, 0, 9, 1.6); scene.add(lamp);   // warm 2700K-ish room light while walking
 const sun = new THREE.DirectionalLight(0xfff1dd, 0.75); sun.position.set(-18, 30, 14); sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left: -22, right: 22, top: 22, bottom: -22, far: 90}); scene.add(sun);
 let view = 'all', cut = false;
@@ -99,7 +100,7 @@ function apply() {
   }
   document.querySelectorAll('nav button[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === view));
   document.getElementById('cut').classList.toggle('on', cut);
-  inner.intensity = walking ? 0.18 : 0; hemi.intensity = walking ? 0.45 : 0.55;
+  inner.intensity = walking ? 0.3 : 0; hemi.intensity = walking ? 0.5 : 0.55; lamp.intensity = walking ? 0.55 : 0;
   home();
 }
 function home() {
@@ -121,7 +122,7 @@ function placeWalker() {
   const [, lv, x, y, lx, ly] = walking, z = (lv === 'f' ? ZF : 0) + 1.6;
   const p = new THREE.Vector3(x - cx, z, -(y - cy)), t = new THREE.Vector3(lx - cx, z - 0.15, -(ly - cy));
   const dir = t.clone().sub(p).normalize();
-  cam.position.copy(p); ctl.target.copy(p.clone().add(dir.multiplyScalar(0.25)));
+  lamp.position.set(p.x, p.y + 1.2, p.z); cam.position.copy(p); ctl.target.copy(p.clone().add(dir.multiplyScalar(0.25)));
   cam.fov = 75; cam.updateProjectionMatrix(); ctl.minDistance = 0.05; ctl.maxDistance = 0.3; ctl.enablePan = false; ctl.maxPolarAngle = Math.PI * 0.85;
 }
 function size() { const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.fov = walking ? 75 : (w < h ? 55 : 40); cam.updateProjectionMatrix(); }
